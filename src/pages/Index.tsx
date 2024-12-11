@@ -44,7 +44,7 @@ const Index = () => {
               <p className="text-xl text-white/90 mb-6 max-w-2xl">
                 Unlock your brain's full potential with our innovative courses and brain training exercises.
               </p>
-              <button className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+              <button className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 duration-200">
                 Start Learning
               </button>
             </div>
@@ -67,15 +67,15 @@ const Index = () => {
           <section className="bg-white rounded-2xl p-8 shadow-sm mb-12 animate-fade-in" style={{ animationDelay: "0.4s" }}>
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">Daily Brain Training</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-accent/20 rounded-xl p-6 hover:bg-accent/30 transition-colors">
+              <div className="bg-accent/20 rounded-xl p-6 hover:bg-accent/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
                 <h3 className="font-semibold mb-2">Memory Challenge</h3>
                 <p className="text-gray-600">Test and improve your memory skills</p>
               </div>
-              <div className="bg-accent/20 rounded-xl p-6 hover:bg-accent/30 transition-colors">
+              <div className="bg-accent/20 rounded-xl p-6 hover:bg-accent/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
                 <h3 className="font-semibold mb-2">Focus Timer</h3>
                 <p className="text-gray-600">Enhanced concentration exercises</p>
               </div>
-              <div className="bg-accent/20 rounded-xl p-6 hover:bg-accent/30 transition-colors">
+              <div className="bg-accent/20 rounded-xl p-6 hover:bg-accent/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
                 <h3 className="font-semibold mb-2">Pattern Recognition</h3>
                 <p className="text-gray-600">Boost your cognitive abilities</p>
               </div>
@@ -86,7 +86,7 @@ const Index = () => {
           <section className="bg-gradient-to-r from-primary to-secondary rounded-2xl p-8 text-white animate-fade-in" style={{ animationDelay: "0.6s" }}>
             <h2 className="text-2xl font-semibold mb-4">Join Our Learning Community</h2>
             <p className="mb-6">Connect with thousands of students improving their cognitive abilities every day.</p>
-            <button className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            <button className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
               Get Started
             </button>
           </section>
