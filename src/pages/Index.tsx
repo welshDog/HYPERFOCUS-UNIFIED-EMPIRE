@@ -35,23 +35,57 @@ const Index = () => {
       
       <main className="flex-1 p-8">
         <div className="max-w-7xl mx-auto">
-          <header className="mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Welcome to Hyperfocus Studios</h1>
-            <p className="text-xl text-gray-600">Unlock your brain's full potential with our courses and training.</p>
-          </header>
+          {/* Hero Section */}
+          <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-secondary p-8 mb-12 animate-fade-in">
+            <div className="relative z-10">
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                Welcome to Hyperfocus Studios
+              </h1>
+              <p className="text-xl text-white/90 mb-6 max-w-2xl">
+                Unlock your brain's full potential with our innovative courses and brain training exercises.
+              </p>
+              <button className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                Start Learning
+              </button>
+            </div>
+            <div className="absolute inset-0 bg-black/10" />
+          </section>
 
-          <section className="mb-12">
+          {/* Featured Courses */}
+          <section className="mb-12 animate-fade-in" style={{ animationDelay: "0.2s" }}>
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">Featured Courses</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredCourses.map((course) => (
-                <CourseCard key={course.title} {...course} />
+              {featuredCourses.map((course, index) => (
+                <div key={course.title} style={{ animationDelay: `${0.1 * (index + 1)}s` }}>
+                  <CourseCard {...course} />
+                </div>
               ))}
             </div>
           </section>
 
-          <section className="bg-gradient-to-r from-primary to-secondary rounded-lg p-8 text-white">
-            <h2 className="text-2xl font-semibold mb-4">Ready to start your journey?</h2>
-            <p className="mb-6">Join thousands of students improving their cognitive abilities every day.</p>
+          {/* Brain Training Section */}
+          <section className="bg-white rounded-2xl p-8 shadow-sm mb-12 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Daily Brain Training</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-accent/20 rounded-xl p-6 hover:bg-accent/30 transition-colors">
+                <h3 className="font-semibold mb-2">Memory Challenge</h3>
+                <p className="text-gray-600">Test and improve your memory skills</p>
+              </div>
+              <div className="bg-accent/20 rounded-xl p-6 hover:bg-accent/30 transition-colors">
+                <h3 className="font-semibold mb-2">Focus Timer</h3>
+                <p className="text-gray-600">Enhanced concentration exercises</p>
+              </div>
+              <div className="bg-accent/20 rounded-xl p-6 hover:bg-accent/30 transition-colors">
+                <h3 className="font-semibold mb-2">Pattern Recognition</h3>
+                <p className="text-gray-600">Boost your cognitive abilities</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Community Section */}
+          <section className="bg-gradient-to-r from-primary to-secondary rounded-2xl p-8 text-white animate-fade-in" style={{ animationDelay: "0.6s" }}>
+            <h2 className="text-2xl font-semibold mb-4">Join Our Learning Community</h2>
+            <p className="mb-6">Connect with thousands of students improving their cognitive abilities every day.</p>
             <button className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
               Get Started
             </button>
