@@ -1,4 +1,13 @@
-import { Brain, Clock, Star } from "lucide-react";
+import { Brain, Clock, Star, User, Tag } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface CourseCardProps {
   title: string;
@@ -7,37 +16,74 @@ interface CourseCardProps {
   difficulty: string;
   rating: number;
   image_url: string;
+  instructor?: string;
+  topics?: string[];
 }
 
-export function CourseCard({ title, description, duration, difficulty, rating, image_url }: CourseCardProps) {
+export function CourseCard({
+  title,
+  description,
+  duration,
+  difficulty,
+  rating,
+  image_url,
+  instructor = "Expert Instructor",
+  topics = ["Focus", "Memory"],
+}: CourseCardProps) {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300">
-      <div className="relative h-48">
-        <img src={image_url} alt={title} className="w-full h-full object-cover" />
-        <div className="absolute top-2 right-2 bg-white px-2 py-1 rounded-full text-sm font-medium text-primary">
+    <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg dark:hover:shadow-primary/5">
+      <div className="relative aspect-video overflow-hidden">
+        <img
+          src={image_url}
+          alt={`Cover image for ${title}`}
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+        <Badge
+          variant="secondary"
+          className="absolute right-2 top-2 bg-white/90 dark:bg-gray-900/90"
+        >
           {difficulty}
-        </div>
+        </Badge>
       </div>
       
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
-        <p className="text-gray-600 text-sm mb-4">{description}</p>
-        
-        <div className="flex items-center justify-between text-sm text-gray-500">
-          <div className="flex items-center">
-            <Clock className="w-4 h-4 mr-1" />
-            <span>{duration}</span>
+      <CardHeader className="space-y-2">
+        <CardTitle className="line-clamp-1">{title}</CardTitle>
+        <CardDescription className="line-clamp-2">{description}</CardDescription>
+      </CardHeader>
+      
+      <CardContent>
+        <div className="grid gap-4">
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <User className="h-4 w-4" />
+              <span>{instructor}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Clock className="h-4 w-4" />
+              <span>{duration}</span>
+            </div>
           </div>
-          <div className="flex items-center">
-            <Star className="w-4 h-4 mr-1 text-yellow-400" />
-            <span>{rating.toFixed(1)}</span>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              <Star className="h-4 w-4 text-yellow-400" />
+              <span className="text-sm font-medium">{rating.toFixed(1)}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Brain className="h-4 w-4 text-primary" />
+              <span className="text-sm">+10 XP</span>
+            </div>
           </div>
-          <div className="flex items-center">
-            <Brain className="w-4 h-4 mr-1 text-primary" />
-            <span>+10 XP</span>
+          
+          <div className="flex flex-wrap gap-2">
+            {topics.map((topic) => (
+              <Badge key={topic} variant="outline" className="text-xs">
+                {topic}
+              </Badge>
+            ))}
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
