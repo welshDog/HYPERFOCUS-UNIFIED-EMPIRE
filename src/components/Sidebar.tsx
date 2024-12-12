@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { Brain, GraduationCap, Home, Trophy, Users } from "lucide-react";
+import { Brain, GraduationCap, Home, Trophy, Users, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const menuItems = [
   { icon: Home, label: "Home", href: "/" },
@@ -12,6 +15,18 @@ const menuItems = [
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast.success("Logged out successfully");
+      navigate("/auth");
+    } catch (error) {
+      console.error("Error logging out:", error);
+      toast.error("Error logging out");
+    }
+  };
 
   return (
     <div
@@ -42,6 +57,16 @@ export function Sidebar() {
             ))}
           </ul>
         </nav>
+
+        <div className="p-4 border-t border-gray-200">
+          <button
+            onClick={handleLogout}
+            className="flex items-center w-full p-2 text-gray-700 rounded-lg hover:bg-primary hover:text-white transition-colors"
+          >
+            <LogOut className="w-6 h-6" />
+            {!collapsed && <span className="ml-3">Logout</span>}
+          </button>
+        </div>
 
         <button
           onClick={() => setCollapsed(!collapsed)}
