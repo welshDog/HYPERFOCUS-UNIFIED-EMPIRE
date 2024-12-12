@@ -6,14 +6,14 @@ interface CourseCardProps {
   duration: string;
   difficulty: string;
   rating: number;
-  imageUrl: string;
+  image_url: string;
 }
 
-export function CourseCard({ title, description, duration, difficulty, rating, imageUrl }: CourseCardProps) {
+export function CourseCard({ title, description, duration, difficulty, rating, image_url }: CourseCardProps) {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:animate-card-hover transition-all duration-300">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300">
       <div className="relative h-48">
-        <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+        <img src={image_url} alt={title} className="w-full h-full object-cover" />
         <div className="absolute top-2 right-2 bg-white px-2 py-1 rounded-full text-sm font-medium text-primary">
           {difficulty}
         </div>

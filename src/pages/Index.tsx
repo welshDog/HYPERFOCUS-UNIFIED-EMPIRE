@@ -1,34 +1,38 @@
+import { useEffect, useState } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { CourseCard } from "@/components/CourseCard";
-
-const featuredCourses = [
-  {
-    title: "Memory Mastery",
-    description: "Learn techniques to improve your memory and recall abilities.",
-    duration: "2h 30m",
-    difficulty: "Beginner",
-    rating: 4.8,
-    imageUrl: "/placeholder.svg",
-  },
-  {
-    title: "Focus Fundamentals",
-    description: "Master the art of deep focus and concentration.",
-    duration: "1h 45m",
-    difficulty: "Intermediate",
-    rating: 4.5,
-    imageUrl: "/placeholder.svg",
-  },
-  {
-    title: "Speed Reading",
-    description: "Double your reading speed while maintaining comprehension.",
-    duration: "3h 15m",
-    difficulty: "Advanced",
-    rating: 4.9,
-    imageUrl: "/placeholder.svg",
-  },
-];
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Brain, BookOpen, Share } from "lucide-react";
 
 const Index = () => {
+  const [courses, setCourses] = useState([]);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const fetchCourses = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('courses')
+        .select('*')
+        .order('rating', { ascending: false })
+        .limit(3);
+
+      if (error) throw error;
+      setCourses(data);
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load courses. Please try again later.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
@@ -55,30 +59,38 @@ const Index = () => {
           <section className="mb-12 animate-fade-in" style={{ animationDelay: "0.2s" }}>
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">Featured Courses</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredCourses.map((course, index) => (
-                <div key={course.title} style={{ animationDelay: `${0.1 * (index + 1)}s` }}>
+              {courses.map((course) => (
+                <div key={course.id} style={{ animationDelay: `${0.1}s` }}>
                   <CourseCard {...course} />
                 </div>
               ))}
             </div>
           </section>
 
-          {/* Brain Training Section */}
-          <section className="bg-white rounded-2xl p-8 shadow-sm mb-12 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Daily Brain Training</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-accent/20 rounded-xl p-6 hover:bg-accent/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
-                <h3 className="font-semibold mb-2">Memory Challenge</h3>
-                <p className="text-gray-600">Test and improve your memory skills</p>
+          {/* Features Grid */}
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+              <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                <Brain className="h-6 w-6 text-primary" />
               </div>
-              <div className="bg-accent/20 rounded-xl p-6 hover:bg-accent/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
-                <h3 className="font-semibold mb-2">Focus Timer</h3>
-                <p className="text-gray-600">Enhanced concentration exercises</p>
+              <h3 className="text-lg font-semibold mb-2">Brain Training</h3>
+              <p className="text-gray-600">Enhance your cognitive abilities with scientifically-backed exercises.</p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+              <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                <BookOpen className="h-6 w-6 text-primary" />
               </div>
-              <div className="bg-accent/20 rounded-xl p-6 hover:bg-accent/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
-                <h3 className="font-semibold mb-2">Pattern Recognition</h3>
-                <p className="text-gray-600">Boost your cognitive abilities</p>
+              <h3 className="text-lg font-semibold mb-2">Expert-Led Courses</h3>
+              <p className="text-gray-600">Learn from industry experts with our curated course collection.</p>
+            </div>
+            
+            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+              <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                <Share className="h-6 w-6 text-primary" />
               </div>
+              <h3 className="text-lg font-semibold mb-2">Community</h3>
+              <p className="text-gray-600">Join a community of learners and share your progress.</p>
             </div>
           </section>
 
