@@ -34,7 +34,6 @@ export default function AuthPage() {
               }
             }
           }}
-          providers={["google"]}
         />
       </div>
     </div>
