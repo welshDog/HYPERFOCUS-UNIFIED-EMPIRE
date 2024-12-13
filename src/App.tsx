@@ -7,6 +7,12 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import Learn from "./pages/Learn";
+import Train from "./pages/Train";
+import Social from "./pages/Social";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
+import Analytics from "./pages/Analytics";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +55,54 @@ const App = () => (
             element={
               <ProtectedRoute>
                 <Index />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/learn"
+            element={
+              <ProtectedRoute>
+                <Learn />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/train"
+            element={
+              <ProtectedRoute>
+                <Train />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/social"
+            element={
+              <ProtectedRoute>
+                <Social />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <ProtectedRoute>
+                <Analytics />
               </ProtectedRoute>
             }
           />

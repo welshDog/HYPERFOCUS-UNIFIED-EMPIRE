@@ -1,21 +1,24 @@
 import { useState } from "react";
-import { Brain, GraduationCap, Home, Trophy, Users, LogOut } from "lucide-react";
+import { Brain, GraduationCap, Home, Trophy, Users, LogOut, Settings, LineChart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 
 const menuItems = [
   { icon: Home, label: "Home", href: "/" },
-  { icon: Brain, label: "Brain Training", href: "/brain-training" },
-  { icon: GraduationCap, label: "Courses", href: "/courses" },
-  { icon: Users, label: "Community", href: "/community" },
-  { icon: Trophy, label: "Achievements", href: "/achievements" },
+  { icon: GraduationCap, label: "Learn", href: "/learn" },
+  { icon: Brain, label: "Train", href: "/train" },
+  { icon: Users, label: "Community", href: "/social" },
+  { icon: Trophy, label: "Profile", href: "/profile" },
+  { icon: Settings, label: "Settings", href: "/settings" },
+  { icon: LineChart, label: "Analytics", href: "/analytics" },
 ];
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -48,7 +51,12 @@ export function Sidebar() {
               <li key={item.label}>
                 <a
                   href={item.href}
-                  className="flex items-center p-2 text-gray-700 rounded-lg hover:bg-primary hover:text-white transition-colors"
+                  className={cn(
+                    "flex items-center p-2 text-gray-700 rounded-lg transition-colors",
+                    location.pathname === item.href
+                      ? "bg-primary text-white"
+                      : "hover:bg-primary hover:text-white"
+                  )}
                 >
                   <item.icon className="w-6 h-6" />
                   {!collapsed && <span className="ml-3">{item.label}</span>}
