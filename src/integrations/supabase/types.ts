@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      brain_games: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          difficulty: string
+          id: string
+          image_url: string
+          points: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          difficulty: string
+          id?: string
+          image_url: string
+          points?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          difficulty?: string
+          id?: string
+          image_url?: string
+          points?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           created_at: string
@@ -80,6 +116,71 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      focus_sessions: {
+        Row: {
+          category: string
+          created_at: string
+          duration: number
+          id: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          duration: number
+          id?: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          duration?: number
+          id?: string
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      game_sessions: {
+        Row: {
+          completed_at: string
+          created_at: string
+          duration: number
+          game_id: string
+          id: string
+          score: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          duration: number
+          game_id: string
+          id?: string
+          score?: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          duration?: number
+          game_id?: string
+          id?: string
+          score?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_sessions_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "brain_games"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       posts: {
         Row: {
