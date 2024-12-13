@@ -6,6 +6,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 
+type PostWithProfile = {
+  id: string;
+  content: string;
+  image_url: string | null;
+  likes: number | null;
+  created_at: string;
+  profiles: {
+    username: string | null;
+    avatar_url: string | null;
+  } | null;
+}
+
 export default function Social() {
   const [currentUserId, setCurrentUserId] = useState<string | undefined>();
 
@@ -30,7 +42,7 @@ export default function Social() {
             avatar_url
           )
         `)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false }) as { data: PostWithProfile[] | null, error: any };
 
       if (postsError) {
         console.error("Error fetching posts:", postsError);
