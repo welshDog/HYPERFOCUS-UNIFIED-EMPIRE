@@ -54,8 +54,8 @@ export default function Social() {
       const transformedPosts = postsData?.map(post => ({
         ...post,
         user: {
-          username: post.profiles?.username ?? null,
-          avatar_url: post.profiles?.avatar_url ?? null
+          username: post.profiles?.[0]?.username ?? null,
+          avatar_url: post.profiles?.[0]?.avatar_url ?? null
         }
       })) as PostWithProfile[];
 
