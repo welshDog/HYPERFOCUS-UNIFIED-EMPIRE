@@ -29,7 +29,7 @@ type PostResponse = {
   profile: {
     username: string | null;
     avatar_url: string | null;
-  };
+  }[];
 };
 
 export default function Social() {
@@ -69,8 +69,8 @@ export default function Social() {
       const transformedPosts = (postsData || []).map(post => ({
         ...post,
         user: {
-          username: post.profile?.username ?? null,
-          avatar_url: post.profile?.avatar_url ?? null
+          username: post.profile[0]?.username ?? null,
+          avatar_url: post.profile[0]?.avatar_url ?? null
         }
       })) as PostWithProfile[];
 
