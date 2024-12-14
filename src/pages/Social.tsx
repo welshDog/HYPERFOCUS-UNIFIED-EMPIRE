@@ -16,7 +16,7 @@ type PostWithProfile = {
     username: string | null;
     avatar_url: string | null;
   } | null;
-}
+};
 
 export default function Social() {
   const [currentUserId, setCurrentUserId] = useState<string | undefined>();
@@ -53,8 +53,14 @@ export default function Social() {
         throw postsError;
       }
 
-      console.log("Posts fetched:", postsData);
-      return postsData as PostWithProfile[];
+      // Transform the data to match our expected type
+      const transformedPosts: PostWithProfile[] = postsData.map(post => ({
+        ...post,
+        profiles: Array.isArray(post.profiles) ? post.profiles[0] : post.profiles
+      }));
+
+      console.log("Posts fetched:", transformedPosts);
+      return transformedPosts;
     },
   });
 
