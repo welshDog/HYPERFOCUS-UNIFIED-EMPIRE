@@ -29,7 +29,7 @@ type PostResponse = {
   profile: {
     username: string | null;
     avatar_url: string | null;
-  } | null;
+  };
 };
 
 export default function Social() {
@@ -66,7 +66,7 @@ export default function Social() {
       }
 
       // Transform the data to match our expected type
-      const transformedPosts = (postsData as PostResponse[])?.map(post => ({
+      const transformedPosts = (postsData || []).map(post => ({
         ...post,
         user: {
           username: post.profile?.username ?? null,
