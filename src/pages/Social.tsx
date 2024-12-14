@@ -42,7 +42,10 @@ export default function Social() {
           likes,
           created_at,
           user_id,
-          profiles!user_id(username, avatar_url)
+          profiles (
+            username,
+            avatar_url
+          )
         `)
         .order('created_at', { ascending: false });
 
