@@ -12,10 +12,10 @@ type PostWithProfile = {
   image_url: string | null;
   likes: number | null;
   created_at: string;
-  profiles: {
+  user: {
     username: string | null;
     avatar_url: string | null;
-  } | null;
+  };
 };
 
 export default function Social() {
@@ -41,9 +41,9 @@ export default function Social() {
           image_url,
           likes,
           created_at,
-          profiles (
-            username,
-            avatar_url
+          user:user_id (
+            username:profiles!inner(username),
+            avatar_url:profiles!inner(avatar_url)
           )
         `)
         .order('created_at', { ascending: false });
@@ -53,14 +53,8 @@ export default function Social() {
         throw postsError;
       }
 
-      // Transform the data to match our expected type
-      const transformedPosts: PostWithProfile[] = postsData.map(post => ({
-        ...post,
-        profiles: Array.isArray(post.profiles) ? post.profiles[0] : post.profiles
-      }));
-
-      console.log("Posts fetched:", transformedPosts);
-      return transformedPosts;
+      console.log("Posts fetched:", postsData);
+      return postsData as PostWithProfile[];
     },
   });
 
@@ -94,10 +88,7 @@ export default function Social() {
                 image_url={post.image_url}
                 likes={post.likes}
                 created_at={post.created_at}
-                user={{
-                  username: post.profiles?.username || 'Anonymous',
-                  avatar_url: post.profiles?.avatar_url,
-                }}
+                user={post.user}
                 currentUserId={currentUserId}
               />
             ))
