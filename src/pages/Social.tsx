@@ -41,10 +41,7 @@ export default function Social() {
           image_url,
           likes,
           created_at,
-          user:profiles!inner(
-            username,
-            avatar_url
-          )
+          profiles!posts_user_id_fkey(username, avatar_url)
         `)
         .order('created_at', { ascending: false });
 
@@ -57,8 +54,8 @@ export default function Social() {
       const transformedPosts = postsData?.map(post => ({
         ...post,
         user: {
-          username: post.user?.[0]?.username ?? null,
-          avatar_url: post.user?.[0]?.avatar_url ?? null
+          username: post.profiles?.username ?? null,
+          avatar_url: post.profiles?.avatar_url ?? null
         }
       })) as PostWithProfile[];
 
