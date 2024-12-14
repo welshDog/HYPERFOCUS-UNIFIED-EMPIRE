@@ -36,8 +36,15 @@ export default function Social() {
       const { data: postsData, error: postsError } = await supabase
         .from('posts')
         .select(`
-          *,
-          profiles!posts_user_id_fkey(username, avatar_url)
+          id,
+          content,
+          image_url,
+          likes,
+          created_at,
+          profiles (
+            username,
+            avatar_url
+          )
         `)
         .order('created_at', { ascending: false });
 
