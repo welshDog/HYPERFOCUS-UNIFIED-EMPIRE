@@ -37,12 +37,9 @@ export default function Social() {
         .from('posts')
         .select(`
           *,
-          profiles:user_id (
-            username,
-            avatar_url
-          )
+          profiles!posts_user_id_fkey(username, avatar_url)
         `)
-        .order('created_at', { ascending: false }) as { data: PostWithProfile[] | null, error: any };
+        .order('created_at', { ascending: false });
 
       if (postsError) {
         console.error("Error fetching posts:", postsError);
@@ -50,7 +47,7 @@ export default function Social() {
       }
 
       console.log("Posts fetched:", postsData);
-      return postsData;
+      return postsData as PostWithProfile[];
     },
   });
 
