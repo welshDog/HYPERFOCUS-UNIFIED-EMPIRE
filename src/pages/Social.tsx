@@ -41,9 +41,9 @@ export default function Social() {
           image_url,
           likes,
           created_at,
-          user:user_id (
-            username:profiles!inner(username),
-            avatar_url:profiles!inner(avatar_url)
+          user:profiles!inner(
+            username,
+            avatar_url
           )
         `)
         .order('created_at', { ascending: false });
@@ -53,8 +53,17 @@ export default function Social() {
         throw postsError;
       }
 
-      console.log("Posts fetched:", postsData);
-      return postsData as PostWithProfile[];
+      // Transform the data to match our expected type
+      const transformedPosts = postsData?.map(post => ({
+        ...post,
+        user: {
+          username: post.user?.[0]?.username ?? null,
+          avatar_url: post.user?.[0]?.avatar_url ?? null
+        }
+      })) as PostWithProfile[];
+
+      console.log("Posts fetched:", transformedPosts);
+      return transformedPosts;
     },
   });
 
