@@ -18,6 +18,20 @@ type PostWithProfile = {
   };
 };
 
+// Add a type for the raw response from Supabase
+type PostResponse = {
+  id: string;
+  content: string;
+  image_url: string | null;
+  likes: number | null;
+  created_at: string;
+  user_id: string;
+  profile: {
+    username: string | null;
+    avatar_url: string | null;
+  } | null;
+};
+
 export default function Social() {
   const [currentUserId, setCurrentUserId] = useState<string | undefined>();
 
@@ -52,7 +66,7 @@ export default function Social() {
       }
 
       // Transform the data to match our expected type
-      const transformedPosts = postsData?.map(post => ({
+      const transformedPosts = (postsData as PostResponse[])?.map(post => ({
         ...post,
         user: {
           username: post.profile?.username ?? null,
