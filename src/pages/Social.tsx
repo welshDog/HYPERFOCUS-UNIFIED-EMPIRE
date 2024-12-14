@@ -18,7 +18,6 @@ type PostWithProfile = {
   };
 };
 
-// Add a type for the raw response from Supabase
 type PostResponse = {
   id: string;
   content: string;
@@ -26,10 +25,10 @@ type PostResponse = {
   likes: number | null;
   created_at: string;
   user_id: string;
-  profile: {
+  profiles: {
     username: string | null;
     avatar_url: string | null;
-  }[];
+  };
 };
 
 export default function Social() {
@@ -56,7 +55,10 @@ export default function Social() {
           likes,
           created_at,
           user_id,
-          profile:profiles(username, avatar_url)
+          profiles (
+            username,
+            avatar_url
+          )
         `)
         .order('created_at', { ascending: false });
 
@@ -69,8 +71,8 @@ export default function Social() {
       const transformedPosts = (postsData || []).map(post => ({
         ...post,
         user: {
-          username: post.profile[0]?.username ?? null,
-          avatar_url: post.profile[0]?.avatar_url ?? null
+          username: post.profiles?.username ?? null,
+          avatar_url: post.profiles?.avatar_url ?? null
         }
       })) as PostWithProfile[];
 
