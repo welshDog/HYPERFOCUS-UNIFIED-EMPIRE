@@ -68,7 +68,7 @@ export default function Social() {
       }
 
       // Transform the data to match our expected type
-      const transformedPosts = (postsData || []).map(post => ({
+      const transformedPosts = (postsData as PostResponse[]).map(post => ({
         ...post,
         user: {
           username: post.profiles?.username ?? null,
