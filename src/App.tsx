@@ -2,33 +2,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import Index from "./pages/Index";
-import Auth from "./pages/Auth";
-import Learn from "./pages/Learn";
-import Train from "./pages/Train";
-import Social from "./pages/Social";
-import Profile from "./pages/Profile";
-import Settings from "./pages/Settings";
-import Analytics from "./pages/Analytics";
+import { BrowserRouter, Routes, Route, useRoutes } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { routes } from "@/config/routes";
 
 const queryClient = new QueryClient();
 
-// Protected route wrapper
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { session, isLoading } = useAuth();
-
-  // Show loading state
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  return session ? children : <Navigate to="/auth" replace />;
+const AppRoutes = () => {
+  return useRoutes(routes);
 };
 
 const App = () => (
@@ -38,65 +19,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/auth" element={<Auth />} />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/learn"
-              element={
-                <ProtectedRoute>
-                  <Learn />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/train"
-              element={
-                <ProtectedRoute>
-                  <Train />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/social"
-              element={
-                <ProtectedRoute>
-                  <Social />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/analytics"
-              element={
-                <ProtectedRoute>
-                  <Analytics />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
+          <AppRoutes />
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
