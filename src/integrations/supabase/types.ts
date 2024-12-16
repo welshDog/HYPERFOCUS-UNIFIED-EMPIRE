@@ -277,22 +277,49 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          background_type: string | null
+          background_value: string | null
+          bio: string | null
           created_at: string
+          font_color: string | null
+          font_family: string | null
           id: string
+          layout_config: Json | null
+          mood: string | null
+          playlist_url: string | null
+          social_links: Json | null
           updated_at: string
           username: string | null
         }
         Insert: {
           avatar_url?: string | null
+          background_type?: string | null
+          background_value?: string | null
+          bio?: string | null
           created_at?: string
+          font_color?: string | null
+          font_family?: string | null
           id: string
+          layout_config?: Json | null
+          mood?: string | null
+          playlist_url?: string | null
+          social_links?: Json | null
           updated_at?: string
           username?: string | null
         }
         Update: {
           avatar_url?: string | null
+          background_type?: string | null
+          background_value?: string | null
+          bio?: string | null
           created_at?: string
+          font_color?: string | null
+          font_family?: string | null
           id?: string
+          layout_config?: Json | null
+          mood?: string | null
+          playlist_url?: string | null
+          social_links?: Json | null
           updated_at?: string
           username?: string | null
         }
