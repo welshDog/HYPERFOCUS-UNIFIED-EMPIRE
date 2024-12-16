@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Music, Palette, Image, Link as LinkIcon } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ProfilePreview } from "./ProfilePreview";
-import { useToast } from "@/components/ui/use-toast";
+import { BackgroundSection } from "./profile/BackgroundSection";
+import { FontSection } from "./profile/FontSection";
+import { BioSection } from "./profile/BioSection";
+import { MusicSection } from "./profile/MusicSection";
+import { SocialSection } from "./profile/SocialSection";
 
 interface ProfileData {
   background_type: 'color' | 'image';
@@ -81,118 +83,37 @@ export function ProfileCustomization() {
           <p className="text-muted-foreground">Make your profile uniquely yours!</p>
         </div>
 
-        {/* Background Section */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Palette className="h-5 w-5" />
-            <h3 className="text-lg font-semibold">Background</h3>
-          </div>
-          <div className="grid gap-4">
-            <div className="flex items-center gap-4">
-              <Label>
-                <input
-                  type="radio"
-                  name="background_type"
-                  value="color"
-                  checked={profileData.background_type === 'color'}
-                  onChange={(e) => setProfileData({
-                    ...profileData,
-                    background_type: 'color'
-                  })}
-                  className="mr-2"
-                />
-                Color
-              </Label>
-              <Label>
-                <input
-                  type="radio"
-                  name="background_type"
-                  value="image"
-                  checked={profileData.background_type === 'image'}
-                  onChange={(e) => setProfileData({
-                    ...profileData,
-                    background_type: 'image'
-                  })}
-                  className="mr-2"
-                />
-                Image
-              </Label>
-            </div>
-            {profileData.background_type === 'color' ? (
-              <Input
-                type="color"
-                value={profileData.background_value}
-                onChange={(e) => setProfileData({
-                  ...profileData,
-                  background_value: e.target.value
-                })}
-              />
-            ) : (
-              <Input
-                type="url"
-                placeholder="Enter image URL"
-                value={profileData.background_value}
-                onChange={(e) => setProfileData({
-                  ...profileData,
-                  background_value: e.target.value
-                })}
-              />
-            )}
-          </div>
-        </div>
+        <BackgroundSection
+          backgroundType={profileData.background_type}
+          backgroundValue={profileData.background_value}
+          onChange={(type, value) => setProfileData({
+            ...profileData,
+            background_type: type,
+            background_value: value
+          })}
+        />
 
-        {/* Font Customization */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <span className="text-lg">Aa</span>
-            <h3 className="text-lg font-semibold">Font Settings</h3>
-          </div>
-          <div className="grid gap-4">
-            <div>
-              <Label>Font Family</Label>
-              <select
-                className="w-full p-2 border rounded-md"
-                value={profileData.font_family}
-                onChange={(e) => setProfileData({
-                  ...profileData,
-                  font_family: e.target.value
-                })}
-              >
-                <option value="Inter">Inter</option>
-                <option value="Arial">Arial</option>
-                <option value="Times New Roman">Times New Roman</option>
-                <option value="Comic Sans MS">Comic Sans MS</option>
-              </select>
-            </div>
-            <div>
-              <Label>Font Color</Label>
-              <Input
-                type="color"
-                value={profileData.font_color}
-                onChange={(e) => setProfileData({
-                  ...profileData,
-                  font_color: e.target.value
-                })}
-              />
-            </div>
-          </div>
-        </div>
+        <FontSection
+          fontFamily={profileData.font_family}
+          fontColor={profileData.font_color}
+          onFontFamilyChange={(value) => setProfileData({
+            ...profileData,
+            font_family: value
+          })}
+          onFontColorChange={(value) => setProfileData({
+            ...profileData,
+            font_color: value
+          })}
+        />
 
-        {/* Bio Section */}
-        <div className="space-y-4">
-          <Label>About Me</Label>
-          <Textarea
-            placeholder="Tell us about yourself..."
-            value={profileData.bio}
-            onChange={(e) => setProfileData({
-              ...profileData,
-              bio: e.target.value
-            })}
-            className="min-h-[100px]"
-          />
-        </div>
+        <BioSection
+          bio={profileData.bio}
+          onChange={(value) => setProfileData({
+            ...profileData,
+            bio: value
+          })}
+        />
 
-        {/* Mood */}
         <div className="space-y-4">
           <Label>Current Mood</Label>
           <Input
@@ -205,73 +126,24 @@ export function ProfileCustomization() {
           />
         </div>
 
-        {/* Music Playlist */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Music className="h-5 w-5" />
-            <Label>Music Playlist URL</Label>
-          </div>
-          <Input
-            placeholder="Spotify or YouTube playlist URL"
-            value={profileData.playlist_url}
-            onChange={(e) => setProfileData({
-              ...profileData,
-              playlist_url: e.target.value
-            })}
-          />
-        </div>
+        <MusicSection
+          playlistUrl={profileData.playlist_url}
+          onChange={(value) => setProfileData({
+            ...profileData,
+            playlist_url: value
+          })}
+        />
 
-        {/* Social Links */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <LinkIcon className="h-5 w-5" />
-            <h3 className="text-lg font-semibold">Social Links</h3>
-          </div>
-          <div className="grid gap-4">
-            <div>
-              <Label>Twitter</Label>
-              <Input
-                placeholder="Twitter profile URL"
-                value={profileData.social_links.twitter || ''}
-                onChange={(e) => setProfileData({
-                  ...profileData,
-                  social_links: {
-                    ...profileData.social_links,
-                    twitter: e.target.value
-                  }
-                })}
-              />
-            </div>
-            <div>
-              <Label>Instagram</Label>
-              <Input
-                placeholder="Instagram profile URL"
-                value={profileData.social_links.instagram || ''}
-                onChange={(e) => setProfileData({
-                  ...profileData,
-                  social_links: {
-                    ...profileData.social_links,
-                    instagram: e.target.value
-                  }
-                })}
-              />
-            </div>
-            <div>
-              <Label>GitHub</Label>
-              <Input
-                placeholder="GitHub profile URL"
-                value={profileData.social_links.github || ''}
-                onChange={(e) => setProfileData({
-                  ...profileData,
-                  social_links: {
-                    ...profileData.social_links,
-                    github: e.target.value
-                  }
-                })}
-              />
-            </div>
-          </div>
-        </div>
+        <SocialSection
+          socialLinks={profileData.social_links}
+          onChange={(platform, value) => setProfileData({
+            ...profileData,
+            social_links: {
+              ...profileData.social_links,
+              [platform]: value
+            }
+          })}
+        />
 
         <Button
           onClick={handleSave}
@@ -282,7 +154,6 @@ export function ProfileCustomization() {
         </Button>
       </div>
 
-      {/* Preview Section */}
       <div className="space-y-4">
         <h2 className="text-2xl font-bold">Profile Preview</h2>
         <ProfilePreview profileData={profileData} />
