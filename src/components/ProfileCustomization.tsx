@@ -157,7 +157,17 @@ export function ProfileCustomization() {
 
       <div className="space-y-4">
         <h2 className="text-2xl font-bold">Profile Preview</h2>
-        <ProfilePreview profileData={profileData} />
+        <ProfilePreview
+          username={session?.user?.email?.split('@')[0] || 'User'}
+          backgroundType={profileData.background_type}
+          backgroundValue={profileData.background_value}
+          fontFamily={profileData.font_family}
+          fontColor={profileData.font_color}
+          bio={profileData.bio}
+          mood={profileData.mood}
+          playlistUrl={profileData.playlist_url}
+          socialLinks={profileData.social_links}
+        />
       </div>
     </div>
   );
