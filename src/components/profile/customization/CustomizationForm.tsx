@@ -7,6 +7,7 @@ import { SocialSection } from "../SocialSection";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { ProfileData } from "./ProfileDataProvider";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface CustomizationFormProps {
   profileData: ProfileData;
@@ -21,6 +22,19 @@ export function CustomizationForm({
   onSave,
   onUpdate,
 }: CustomizationFormProps) {
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-32" />
+        <Skeleton className="h-24" />
+        <Skeleton className="h-24" />
+        <Skeleton className="h-16" />
+        <Skeleton className="h-24" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
