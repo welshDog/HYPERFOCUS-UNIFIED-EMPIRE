@@ -25,7 +25,8 @@ export const profileFormSchema = z.object({
   social_links: z.object({
     twitter: z.string().url("Invalid Twitter URL").or(z.literal("")),
     instagram: z.string().url("Invalid Instagram URL").or(z.literal("")),
-    github: z.string().url("Invalid GitHub URL").or(z.literal(""))
+    github: z.string().url("Invalid GitHub URL").or(z.literal("")),
+    myspace: z.string().url("Invalid MySpace URL").or(z.literal(""))
   })
 })
 

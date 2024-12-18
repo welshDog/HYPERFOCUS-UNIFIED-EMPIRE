@@ -1,6 +1,5 @@
 import { ProfileHeader } from "./ProfileHeader";
 import { SocialLinks } from "./SocialLinks";
-import { MusicPlayer } from "./MusicPlayer";
 
 interface ProfileContentProps {
   username: string;
@@ -11,8 +10,8 @@ interface ProfileContentProps {
     twitter?: string;
     instagram?: string;
     github?: string;
+    myspace?: string;
   };
-  playlistUrl?: string;
   fontFamily: string;
   fontColor: string;
 }
@@ -23,21 +22,30 @@ export function ProfileContent({
   mood,
   bio,
   socialLinks,
-  playlistUrl,
   fontFamily,
   fontColor,
 }: ProfileContentProps) {
   return (
-    <div style={{ fontFamily, color: fontColor }} className="space-y-6 p-6">
+    <div style={{ fontFamily, color: fontColor }} className="space-y-4">
       <ProfileHeader username={username} avatarUrl={avatarUrl} mood={mood} />
       
-      {bio && <p className="text-lg">{bio}</p>}
+      {socialLinks?.myspace && (
+        <div className="text-sm">
+          <span className="font-semibold">MySpace URL: </span>
+          <a 
+            href={socialLinks.myspace}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            {socialLinks.myspace}
+          </a>
+        </div>
+      )}
       
       {socialLinks && Object.values(socialLinks).some(link => link) && (
         <SocialLinks links={socialLinks} />
       )}
-      
-      {playlistUrl && <MusicPlayer url={playlistUrl} />}
     </div>
   );
 }
