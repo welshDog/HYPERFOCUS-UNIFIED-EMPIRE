@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -13,11 +13,7 @@ export const useCourses = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
-  useEffect(() => {
-    fetchCourses();
-  }, [searchQuery, difficulty, currentPage]);
-
-  const fetchCourses = async () => {
+  const fetchCourses = useCallback(async () => {
     try {
       setIsLoading(true);
       console.log("Fetching courses with filters:", { searchQuery, difficulty, currentPage });
@@ -55,7 +51,11 @@ export const useCourses = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [searchQuery, difficulty, currentPage, toast]);
+
+  useEffect(() => {
+    fetchCourses();
+  }, [fetchCourses]);
 
   return {
     courses,
