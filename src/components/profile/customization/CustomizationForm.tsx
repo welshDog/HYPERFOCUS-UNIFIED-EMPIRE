@@ -31,17 +31,10 @@ export function CustomizationForm({
   async function onSubmit(data: ProfileFormValues) {
     try {
       await onSave(data);
-      toast({
-        title: "Profile updated",
-        description: "Your profile has been updated successfully.",
-      });
+      toast.success("Profile updated successfully");
     } catch (error) {
       console.error("Error saving profile:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update profile. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Failed to update profile. Please try again.");
     }
   }
 

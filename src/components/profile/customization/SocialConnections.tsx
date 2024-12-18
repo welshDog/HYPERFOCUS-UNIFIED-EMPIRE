@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Youtube, Instagram, BrandTiktok } from "lucide-react";
+import { Youtube, Instagram, Music2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface SocialConnectionsProps {
@@ -52,7 +52,7 @@ export function SocialConnections({ connectedAccounts, onConnect }: SocialConnec
           onClick={() => handleConnect('tiktok')}
           className="flex items-center gap-2"
         >
-          <BrandTiktok className="h-4 w-4" />
+          <Music2 className="h-4 w-4" />
           {connectedAccounts.tiktok ? 'TikTok Connected' : 'Connect TikTok'}
         </Button>
       </div>
