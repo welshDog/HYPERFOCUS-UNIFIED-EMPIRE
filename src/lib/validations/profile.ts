@@ -27,7 +27,14 @@ export const profileFormSchema = z.object({
     instagram: z.string().url("Invalid Instagram URL").or(z.literal("")),
     github: z.string().url("Invalid GitHub URL").or(z.literal("")),
     myspace: z.string().url("Invalid MySpace URL").or(z.literal(""))
-  })
-})
+  }),
+  custom_html: z.string().optional(),
+  custom_css: z.string().optional(),
+  layout_template: z.string().optional(),
+  connected_accounts: z.record(z.string()).optional(),
+  music_collection: z.array(z.string()).optional(),
+  profile_stats: z.record(z.unknown()).optional(),
+  custom_sections: z.record(z.unknown()).optional()
+});
 
 export type ProfileFormValues = z.infer<typeof profileFormSchema>

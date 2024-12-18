@@ -274,19 +274,56 @@ export type Database = {
           },
         ]
       }
+      profile_addons: {
+        Row: {
+          category: string
+          code: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          code: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          code?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
           background_type: string | null
           background_value: string | null
           bio: string | null
+          connected_accounts: Json | null
           created_at: string
+          custom_css: string | null
+          custom_html: string | null
+          custom_sections: Json | null
           font_color: string | null
           font_family: string | null
           id: string
           layout_config: Json | null
+          layout_template: string | null
           mood: string | null
+          music_collection: Json | null
           playlist_url: string | null
+          profile_stats: Json | null
           social_links: Json | null
           updated_at: string
           username: string | null
@@ -296,13 +333,20 @@ export type Database = {
           background_type?: string | null
           background_value?: string | null
           bio?: string | null
+          connected_accounts?: Json | null
           created_at?: string
+          custom_css?: string | null
+          custom_html?: string | null
+          custom_sections?: Json | null
           font_color?: string | null
           font_family?: string | null
           id: string
           layout_config?: Json | null
+          layout_template?: string | null
           mood?: string | null
+          music_collection?: Json | null
           playlist_url?: string | null
+          profile_stats?: Json | null
           social_links?: Json | null
           updated_at?: string
           username?: string | null
@@ -312,16 +356,59 @@ export type Database = {
           background_type?: string | null
           background_value?: string | null
           bio?: string | null
+          connected_accounts?: Json | null
           created_at?: string
+          custom_css?: string | null
+          custom_html?: string | null
+          custom_sections?: Json | null
           font_color?: string | null
           font_family?: string | null
           id?: string
           layout_config?: Json | null
+          layout_template?: string | null
           mood?: string | null
+          music_collection?: Json | null
           playlist_url?: string | null
+          profile_stats?: Json | null
           social_links?: Json | null
           updated_at?: string
           username?: string | null
+        }
+        Relationships: []
+      }
+      shared_layouts: {
+        Row: {
+          created_at: string
+          css: string
+          description: string | null
+          html: string | null
+          id: string
+          name: string
+          preview_image_url: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          css: string
+          description?: string | null
+          html?: string | null
+          id?: string
+          name: string
+          preview_image_url?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          css?: string
+          description?: string | null
+          html?: string | null
+          id?: string
+          name?: string
+          preview_image_url?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

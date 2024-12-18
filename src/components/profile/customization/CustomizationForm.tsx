@@ -2,10 +2,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { ProfileFormValues, profileFormSchema } from "@/lib/validations/profile";
 import { FormFields } from "./form/FormFields";
 import { FormHeader } from "./form/FormHeader";
+import { CodeEditor } from "./CodeEditor";
+import { SocialConnections } from "./SocialConnections";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface CustomizationFormProps {
   profileData: ProfileFormValues;
@@ -42,11 +45,54 @@ export function CustomizationForm({
     }
   }
 
+  const handleCodeSave = (html: string, css: string) => {
+    onUpdate({ 
+      custom_html: html, 
+      custom_css: css 
+    });
+  };
+
+  const handleSocialConnect = (platform: string, accountId: string) => {
+    onUpdate({
+      connected_accounts: {
+        ...profileData.connected_accounts,
+        [platform]: accountId
+      }
+    });
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormHeader />
-        <FormFields form={form} onUpdate={onUpdate} />
+        
+        <Tabs defaultValue="basic" className="w-full">
+          <TabsList>
+            <TabsTrigger value="basic">Basic Info</TabsTrigger>
+            <TabsTrigger value="advanced">Advanced</TabsTrigger>
+            <TabsTrigger value="social">Social</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="basic">
+            <FormFields form={form} onUpdate={onUpdate} />
+          </TabsContent>
+          
+          <TabsContent value="advanced">
+            <CodeEditor
+              initialHtml={profileData.custom_html}
+              initialCss={profileData.custom_css}
+              onSave={handleCodeSave}
+            />
+          </TabsContent>
+          
+          <TabsContent value="social">
+            <SocialConnections
+              connectedAccounts={profileData.connected_accounts || {}}
+              onConnect={handleSocialConnect}
+            />
+          </TabsContent>
+        </Tabs>
+
         <Button type="submit" disabled={loading}>
           {loading ? "Saving..." : "Save Changes"}
         </Button>
