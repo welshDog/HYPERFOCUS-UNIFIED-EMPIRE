@@ -11,9 +11,10 @@ import type { ProfileFormValues } from "@/lib/validations/profile";
 
 interface FormFieldsProps {
   form: UseFormReturn<ProfileFormValues>;
+  onUpdate: (data: Partial<ProfileFormValues>) => void;
 }
 
-export function FormFields({ form }: FormFieldsProps) {
+export function FormFields({ form, onUpdate }: FormFieldsProps) {
   return (
     <>
       <FormField
@@ -27,6 +28,7 @@ export function FormFields({ form }: FormFieldsProps) {
               onChange={(type, value) => {
                 form.setValue("background_type", type);
                 form.setValue("background_value", value);
+                onUpdate({ background_type: type, background_value: value });
               }}
             />
             <FormMessage />
@@ -42,8 +44,14 @@ export function FormFields({ form }: FormFieldsProps) {
             <FontSection
               fontFamily={field.value}
               fontColor={form.watch("font_color")}
-              onFontFamilyChange={(value) => form.setValue("font_family", value)}
-              onFontColorChange={(value) => form.setValue("font_color", value)}
+              onFontFamilyChange={(value) => {
+                form.setValue("font_family", value);
+                onUpdate({ font_family: value });
+              }}
+              onFontColorChange={(value) => {
+                form.setValue("font_color", value);
+                onUpdate({ font_color: value });
+              }}
             />
             <FormMessage />
           </FormItem>
@@ -57,7 +65,10 @@ export function FormFields({ form }: FormFieldsProps) {
           <FormItem>
             <BioSection
               bio={field.value}
-              onChange={(value) => form.setValue("bio", value)}
+              onChange={(value) => {
+                form.setValue("bio", value);
+                onUpdate({ bio: value });
+              }}
             />
             <FormMessage />
           </FormItem>
@@ -74,6 +85,10 @@ export function FormFields({ form }: FormFieldsProps) {
               <Input
                 placeholder="How are you feeling?"
                 {...field}
+                onChange={(e) => {
+                  field.onChange(e);
+                  onUpdate({ mood: e.target.value });
+                }}
               />
             </FormControl>
             <FormMessage />
@@ -88,7 +103,10 @@ export function FormFields({ form }: FormFieldsProps) {
           <FormItem>
             <MusicSection
               playlistUrl={field.value}
-              onChange={(value) => form.setValue("playlist_url", value)}
+              onChange={(value) => {
+                form.setValue("playlist_url", value);
+                onUpdate({ playlist_url: value });
+              }}
             />
             <FormMessage />
           </FormItem>
@@ -102,9 +120,15 @@ export function FormFields({ form }: FormFieldsProps) {
           <FormItem>
             <SocialSection
               socialLinks={field.value}
-              onChange={(platform, value) =>
-                form.setValue(`social_links.${platform}`, value)
-              }
+              onChange={(platform, value) => {
+                form.setValue(`social_links.${platform}`, value);
+                onUpdate({ 
+                  social_links: {
+                    ...field.value,
+                    [platform]: value
+                  }
+                });
+              }}
             />
             <FormMessage />
           </FormItem>
