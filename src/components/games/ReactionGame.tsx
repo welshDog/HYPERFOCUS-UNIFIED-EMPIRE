@@ -21,7 +21,29 @@ export const ReactionGame = () => {
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [sessionTimes, setSessionTimes] = useState<number[]>([]);
   const [showSummary, setShowSummary] = useState(false);
+  const [gameId, setGameId] = useState<string | null>(null);
   const { session } = useAuth();
+
+  // Fetch game ID on component mount
+  useEffect(() => {
+    const fetchGameId = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('brain_games')
+          .select('id')
+          .eq('title', 'Reaction Game')
+          .single();
+        
+        if (error) throw error;
+        if (data) setGameId(data.id);
+      } catch (error) {
+        console.error('Error fetching game ID:', error);
+        toast.error('Failed to initialize game');
+      }
+    };
+
+    fetchGameId();
+  }, []);
 
   // Sound effects
   const playSound = useCallback((type: "ready" | "success" | "error") => {
@@ -74,7 +96,9 @@ export const ReactionGame = () => {
         playSound("success");
       }
       
-      saveGameProgress(reaction);
+      if (gameId) {
+        saveGameProgress(reaction);
+      }
     } else if (gameState === "waiting") {
       setMessage("Too soon! Wait for the green color!");
       if (timeoutId) clearTimeout(timeoutId);
@@ -84,12 +108,12 @@ export const ReactionGame = () => {
   };
 
   const saveGameProgress = async (score: number) => {
-    if (!session?.user) return;
+    if (!session?.user || !gameId) return;
 
     try {
       const { error } = await supabase.from("game_sessions").insert({
         user_id: session.user.id,
-        game_id: "reaction-game",
+        game_id: gameId,
         score: score,
         duration: score,
       });
