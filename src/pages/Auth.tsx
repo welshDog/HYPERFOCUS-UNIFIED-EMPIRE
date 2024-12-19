@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 
 export default function AuthPage() {
   const navigate = useNavigate();
@@ -16,24 +17,45 @@ export default function AuthPage() {
     }
   }, [session, navigate]);
 
+  const handleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+    });
+    
+    if (error) {
+      console.error('Error logging in:', error.message);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
         <h1 className="text-2xl font-bold text-center mb-8 text-primary">Welcome to Hyperfocus Studios</h1>
-        <Auth
-          supabaseClient={supabase}
-          appearance={{
-            theme: ThemeSupa,
-            variables: {
-              default: {
-                colors: {
-                  brand: 'rgb(var(--color-primary))',
-                  brandAccent: 'rgb(var(--color-primary))',
+        <div className="space-y-6">
+          <Auth
+            supabaseClient={supabase}
+            appearance={{
+              theme: ThemeSupa,
+              variables: {
+                default: {
+                  colors: {
+                    brand: 'rgb(var(--color-primary))',
+                    brandAccent: 'rgb(var(--color-primary))',
+                  }
                 }
               }
-            }
-          }}
-        />
+            }}
+          />
+          <div className="text-center">
+            <Button 
+              onClick={handleLogin}
+              className="w-full"
+              size="lg"
+            >
+              Login with Google
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

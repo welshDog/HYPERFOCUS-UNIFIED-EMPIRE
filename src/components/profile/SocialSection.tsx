@@ -3,9 +3,7 @@ import { Label } from "@/components/ui/label";
 import { LinkIcon } from "lucide-react";
 
 interface SocialLinks {
-  twitter?: string;
-  instagram?: string;
-  github?: string;
+  myspace?: string;
 }
 
 interface SocialSectionProps {
@@ -22,27 +20,11 @@ export function SocialSection({ socialLinks, onChange }: SocialSectionProps) {
       </div>
       <div className="grid gap-4">
         <div>
-          <Label>Twitter</Label>
+          <Label>MySpace</Label>
           <Input
-            placeholder="Twitter profile URL"
-            value={socialLinks.twitter || ''}
-            onChange={(e) => onChange('twitter', e.target.value)}
-          />
-        </div>
-        <div>
-          <Label>Instagram</Label>
-          <Input
-            placeholder="Instagram profile URL"
-            value={socialLinks.instagram || ''}
-            onChange={(e) => onChange('instagram', e.target.value)}
-          />
-        </div>
-        <div>
-          <Label>GitHub</Label>
-          <Input
-            placeholder="GitHub profile URL"
-            value={socialLinks.github || ''}
-            onChange={(e) => onChange('github', e.target.value)}
+            placeholder="MySpace profile URL"
+            value={socialLinks.myspace || ''}
+            onChange={(e) => onChange('myspace', e.target.value)}
           />
         </div>
       </div>
