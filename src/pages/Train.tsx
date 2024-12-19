@@ -1,6 +1,7 @@
 import { Sidebar } from "@/components/Sidebar";
 import { Card } from "@/components/ui/card";
 import { MemoryGame } from "@/components/games/MemoryGame";
+import { ReactionGame } from "@/components/games/ReactionGame";
 import { Brain, Zap, Timer } from "lucide-react";
 import { useState } from "react";
 
@@ -19,7 +20,6 @@ export default function Train() {
       name: "Reaction Game",
       description: "Improve your reaction time",
       icon: Zap,
-      comingSoon: true,
     },
     {
       id: "focus",
@@ -82,6 +82,7 @@ export default function Train() {
                 ← Back to games
               </button>
               {selectedGame === "memory" && <MemoryGame />}
+              {selectedGame === "reaction" && <ReactionGame />}
             </div>
           )}
         </div>
