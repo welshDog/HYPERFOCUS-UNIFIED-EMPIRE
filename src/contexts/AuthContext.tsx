@@ -17,7 +17,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Get initial session
     const getInitialSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error("Error getting initial session:", error.message);
+          return;
+        }
         console.log("Initial session:", session ? "authenticated" : "not authenticated");
         setSession(session);
       } catch (error) {
@@ -30,8 +34,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     getInitialSession();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("Auth state changed:", session ? "authenticated" : "not authenticated");
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("Auth state changed:", event, session ? "authenticated" : "not authenticated");
+      
+      if (event === 'SIGNED_OUT') {
+        // Clear any stored tokens
+        localStorage.removeItem('supabase.auth.token');
+      }
+      
       setSession(session);
       setIsLoading(false);
     });
