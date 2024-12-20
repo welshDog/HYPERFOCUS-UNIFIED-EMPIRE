@@ -22,34 +22,38 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "#F1F0FB",
+        foreground: "#1A1F2C",
         primary: {
-          DEFAULT: "#4C1D95",
+          DEFAULT: "#9b87f5",
           foreground: "#ffffff",
-          hover: "#5B21B6",
+          hover: "#7E69AB",
         },
         secondary: {
-          DEFAULT: "#8B5CF6",
+          DEFAULT: "#F97316",
           foreground: "#ffffff",
-          hover: "#7C3AED",
+          hover: "#EA580C",
         },
         accent: {
-          DEFAULT: "#C4B5FD",
-          foreground: "#1F2937",
+          DEFAULT: "#F2FCE2",
+          foreground: "#1A1F2C",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "#8E9196",
+          foreground: "#8A898C",
         },
         card: {
           DEFAULT: "#ffffff",
-          foreground: "#1F2937",
+          foreground: "#1A1F2C",
         },
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        display: ['Montserrat', 'sans-serif'],
       },
       keyframes: {
         "accordion-down": {
