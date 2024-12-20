@@ -40,5 +40,33 @@ export async function fetchAnalytics(platform?: string) {
     throw error;
   }
 
+  // Add some sample data if no data exists
+  if (!data || data.length === 0) {
+    const sampleData = [
+      {
+        platform: "web",
+        metric_name: "Page Views",
+        metric_value: { count: 150 },
+        timestamp: new Date().toISOString(),
+        source: "application"
+      },
+      {
+        platform: "social",
+        metric_name: "Social Shares",
+        metric_value: { count: 45 },
+        timestamp: new Date().toISOString(),
+        source: "twitter"
+      },
+      {
+        platform: "web",
+        metric_name: "Engagement Rate",
+        metric_value: { value: 0.67 },
+        timestamp: new Date().toISOString(),
+        source: "application"
+      }
+    ];
+    return sampleData;
+  }
+
   return data;
 }
