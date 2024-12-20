@@ -336,6 +336,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          accomplishments: Json | null
           avatar_url: string | null
           background_type: string | null
           background_value: string | null
@@ -348,17 +349,21 @@ export type Database = {
           font_color: string | null
           font_family: string | null
           id: string
+          interests: Json | null
           layout_config: Json | null
           layout_template: string | null
           mood: string | null
           music_collection: Json | null
           playlist_url: string | null
+          privacy_settings: Json | null
           profile_stats: Json | null
           social_links: Json | null
+          summary: string | null
           updated_at: string
           username: string | null
         }
         Insert: {
+          accomplishments?: Json | null
           avatar_url?: string | null
           background_type?: string | null
           background_value?: string | null
@@ -371,17 +376,21 @@ export type Database = {
           font_color?: string | null
           font_family?: string | null
           id: string
+          interests?: Json | null
           layout_config?: Json | null
           layout_template?: string | null
           mood?: string | null
           music_collection?: Json | null
           playlist_url?: string | null
+          privacy_settings?: Json | null
           profile_stats?: Json | null
           social_links?: Json | null
+          summary?: string | null
           updated_at?: string
           username?: string | null
         }
         Update: {
+          accomplishments?: Json | null
           avatar_url?: string | null
           background_type?: string | null
           background_value?: string | null
@@ -394,13 +403,16 @@ export type Database = {
           font_color?: string | null
           font_family?: string | null
           id?: string
+          interests?: Json | null
           layout_config?: Json | null
           layout_template?: string | null
           mood?: string | null
           music_collection?: Json | null
           playlist_url?: string | null
+          privacy_settings?: Json | null
           profile_stats?: Json | null
           social_links?: Json | null
+          summary?: string | null
           updated_at?: string
           username?: string | null
         }

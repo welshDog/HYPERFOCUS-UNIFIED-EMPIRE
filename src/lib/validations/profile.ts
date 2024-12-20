@@ -20,6 +20,9 @@ export const profileFormSchema = z.object({
     .min(1, "Font color is required")
     .regex(/^#[0-9A-F]{6}$/i, "Invalid color format"),
   bio: z.string().max(500, "Bio must be less than 500 characters"),
+  summary: z.string().max(300, "Summary must be less than 300 characters").optional(),
+  interests: z.array(z.string()).optional(),
+  accomplishments: z.array(z.string()).optional(),
   mood: z.string().max(100, "Mood must be less than 100 characters"),
   playlist_url: z.string().url("Invalid URL").or(z.literal("")),
   social_links: z.object({

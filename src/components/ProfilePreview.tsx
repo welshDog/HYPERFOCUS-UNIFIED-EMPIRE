@@ -5,6 +5,9 @@ interface ProfilePreviewProps {
   avatarUrl?: string;
   mood?: string;
   bio?: string;
+  summary?: string;
+  interests?: string[];
+  accomplishments?: string[];
   socialLinks?: {
     twitter?: string;
     instagram?: string;
@@ -23,6 +26,9 @@ export function ProfilePreview({
   avatarUrl,
   mood,
   bio,
+  summary,
+  interests,
+  accomplishments,
   socialLinks,
   playlistUrl,
   backgroundType,
@@ -47,17 +53,13 @@ export function ProfilePreview({
               avatarUrl={avatarUrl}
               mood={mood}
               bio={bio}
+              summary={summary}
+              interests={interests}
+              accomplishments={accomplishments}
               socialLinks={socialLinks}
               fontFamily={fontFamily}
               fontColor={fontColor}
             />
-          </div>
-          
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow">
-            <h3 className="font-bold mb-2">Latest Blog Entry</h3>
-            <div className="prose max-w-none">
-              {bio || "No blog entries yet..."}
-            </div>
           </div>
         </div>
         

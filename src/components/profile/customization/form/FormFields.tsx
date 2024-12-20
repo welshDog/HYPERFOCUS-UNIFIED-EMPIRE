@@ -5,6 +5,9 @@ import { BioSection } from "../../BioSection";
 import { MusicSection } from "../../MusicSection";
 import { SocialSection } from "../../SocialSection";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { PlusCircle, X } from "lucide-react";
 import { FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 import type { ProfileFormValues } from "@/lib/validations/profile";
@@ -15,8 +18,129 @@ interface FormFieldsProps {
 }
 
 export function FormFields({ form, onUpdate }: FormFieldsProps) {
+  const handleAddInterest = () => {
+    const currentInterests = form.watch("interests") || [];
+    form.setValue("interests", [...currentInterests, ""]);
+  };
+
+  const handleAddAccomplishment = () => {
+    const currentAccomplishments = form.watch("accomplishments") || [];
+    form.setValue("accomplishments", [...currentAccomplishments, ""]);
+  };
+
+  const handleRemoveInterest = (index: number) => {
+    const currentInterests = form.watch("interests") || [];
+    const newInterests = currentInterests.filter((_, i) => i !== index);
+    form.setValue("interests", newInterests);
+    onUpdate({ interests: newInterests });
+  };
+
+  const handleRemoveAccomplishment = (index: number) => {
+    const currentAccomplishments = form.watch("accomplishments") || [];
+    const newAccomplishments = currentAccomplishments.filter((_, i) => i !== index);
+    form.setValue("accomplishments", newAccomplishments);
+    onUpdate({ accomplishments: newAccomplishments });
+  };
+
   return (
-    <>
+    <div className="space-y-8">
+      <FormField
+        control={form.control}
+        name="summary"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Summary</FormLabel>
+            <FormControl>
+              <Textarea
+                placeholder="Write a brief summary about yourself..."
+                {...field}
+                onChange={(e) => {
+                  field.onChange(e);
+                  onUpdate({ summary: e.target.value });
+                }}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <div>
+        <FormLabel>Interests</FormLabel>
+        <div className="space-y-2">
+          {(form.watch("interests") || []).map((interest, index) => (
+            <div key={index} className="flex gap-2">
+              <Input
+                value={interest}
+                onChange={(e) => {
+                  const newInterests = [...(form.watch("interests") || [])];
+                  newInterests[index] = e.target.value;
+                  form.setValue("interests", newInterests);
+                  onUpdate({ interests: newInterests });
+                }}
+                placeholder="Enter an interest..."
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => handleRemoveInterest(index)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleAddInterest}
+            className="mt-2"
+          >
+            <PlusCircle className="h-4 w-4 mr-2" />
+            Add Interest
+          </Button>
+        </div>
+      </div>
+
+      <div>
+        <FormLabel>Accomplishments</FormLabel>
+        <div className="space-y-2">
+          {(form.watch("accomplishments") || []).map((accomplishment, index) => (
+            <div key={index} className="flex gap-2">
+              <Input
+                value={accomplishment}
+                onChange={(e) => {
+                  const newAccomplishments = [...(form.watch("accomplishments") || [])];
+                  newAccomplishments[index] = e.target.value;
+                  form.setValue("accomplishments", newAccomplishments);
+                  onUpdate({ accomplishments: newAccomplishments });
+                }}
+                placeholder="Enter an accomplishment..."
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => handleRemoveAccomplishment(index)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleAddAccomplishment}
+            className="mt-2"
+          >
+            <PlusCircle className="h-4 w-4 mr-2" />
+            Add Accomplishment
+          </Button>
+        </div>
+      </div>
+
       <FormField
         control={form.control}
         name="background_type"
@@ -134,6 +258,6 @@ export function FormFields({ form, onUpdate }: FormFieldsProps) {
           </FormItem>
         )}
       />
-    </>
+    </div>
   );
 }
