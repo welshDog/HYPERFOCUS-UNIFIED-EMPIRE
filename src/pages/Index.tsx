@@ -4,6 +4,7 @@ import { SearchFilters } from "@/components/home/SearchFilters";
 import { FeaturedCourses } from "@/components/home/FeaturedCourses";
 import { FeaturesGrid } from "@/components/home/FeaturesGrid";
 import { CommunitySection } from "@/components/home/CommunitySection";
+import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
 import { useCourses } from "@/hooks/useCourses";
 import { memo } from "react";
 
@@ -49,6 +50,8 @@ const Index = () => {
             totalPages={totalPages}
             setCurrentPage={setCurrentPage}
           />
+
+          <AnalyticsDashboard />
 
           <MemoizedFeaturesGrid />
           

@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      analytics_data: {
+        Row: {
+          id: string
+          metric_name: string
+          metric_value: Json
+          platform: string
+          source: string
+          timestamp: string | null
+          user_id: string | null
+        }
+        Insert: {
+          id?: string
+          metric_name: string
+          metric_value: Json
+          platform: string
+          source: string
+          timestamp?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          id?: string
+          metric_name?: string
+          metric_value?: Json
+          platform?: string
+          source?: string
+          timestamp?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       brain_games: {
         Row: {
           category: string
