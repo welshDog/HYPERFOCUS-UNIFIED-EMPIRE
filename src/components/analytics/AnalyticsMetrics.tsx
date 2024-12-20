@@ -1,8 +1,9 @@
 import { Card } from "@/components/ui/card";
+import { ReactNode } from "react";
 
 interface AnalyticsMetricsProps {
   data: any[];
-  type?: 'social' | 'engagement';
+  type?: 'social' | 'engagement' | 'overview';
 }
 
 export function AnalyticsMetrics({ data, type = 'overview' }: AnalyticsMetricsProps) {
@@ -29,7 +30,7 @@ export function AnalyticsMetrics({ data, type = 'overview' }: AnalyticsMetricsPr
         {Object.entries(metrics).map(([name, value]) => (
           <Card key={name} className="p-4">
             <h4 className="text-sm font-medium text-gray-500">{name}</h4>
-            <p className="text-2xl font-bold">{value}</p>
+            <p className="text-2xl font-bold">{String(value)}</p>
           </Card>
         ))}
       </div>

@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 
 interface AnalyticsChartProps {
   data: any[];
-  type?: 'social' | 'engagement';
+  type?: 'social' | 'engagement' | 'overview';
 }
 
 export function AnalyticsChart({ data, type = 'overview' }: AnalyticsChartProps) {
