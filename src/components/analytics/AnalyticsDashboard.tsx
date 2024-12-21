@@ -79,4 +79,6 @@ const AnalyticsDashboard = () => {
   );
 };
 
+AnalyticsDashboard.displayName = "AnalyticsDashboard";
+
 export default AnalyticsDashboard;
