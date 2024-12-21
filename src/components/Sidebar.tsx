@@ -1,11 +1,18 @@
 import { Link, useLocation } from "react-router-dom";
 import { Brain, Home, BarChart2, User, Users, Dumbbell } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function Sidebar() {
   const location = useLocation();
   const [isHovered, setIsHovered] = useState(false);
+  
+  useEffect(() => {
+    const container = document.querySelector('.content-container');
+    if (container) {
+      container.classList.toggle('sidebar-expanded', isHovered);
+    }
+  }, [isHovered]);
   
   const navigation = [
     { name: "Home", href: "/", icon: Home },
@@ -19,15 +26,15 @@ export function Sidebar() {
   return (
     <div 
       className={cn(
-        "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col transition-all duration-300 ease-in-out",
-        isHovered ? "lg:w-64" : "lg:w-20"
+        "fixed left-0 top-0 h-full z-50 flex flex-col transition-all duration-300 ease-in-out bg-white",
+        isHovered ? "w-64" : "w-20"
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       role="navigation"
       aria-label="Main navigation"
     >
-      <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4 border-r">
+      <div className="flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-4 border-r h-full">
         <div className="flex h-16 shrink-0 items-center">
           <Link to="/" className="flex items-center space-x-2">
             <Brain className="h-8 w-8 text-primary" />

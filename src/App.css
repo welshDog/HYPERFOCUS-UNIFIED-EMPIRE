@@ -7,11 +7,17 @@
 }
 
 .content-container {
-  @apply pl-20 w-full min-h-screen bg-background transition-all duration-300 ease-in-out hover:pl-64;
+  @apply ml-20 w-full min-h-screen bg-background transition-all duration-300 ease-in-out;
+  margin-left: 5rem; /* 20 in rem units */
+}
+
+.content-container.sidebar-expanded {
+  margin-left: 16rem; /* 64 in rem units */
 }
 
 @media (max-width: 1024px) {
   .content-container {
-    @apply pl-0;
+    @apply ml-0;
+    margin-left: 0;
   }
 }
