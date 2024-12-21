@@ -1,10 +1,13 @@
 #root {
   margin: 0 auto;
   text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .content-container {
-  @apply pl-64 w-full min-h-screen bg-background;
+  @apply pl-64 w-full min-h-screen bg-background transition-all duration-300 ease-in-out;
 }
 
 @media (max-width: 1024px) {

@@ -3,7 +3,6 @@ import { Sidebar } from "@/components/Sidebar";
 import { LoadingBrain } from "@/components/LoadingBrain";
 import { useCourses } from "@/hooks/useCourses";
 
-// Lazy load components for better initial load performance
 const HeroSection = lazy(() => import("@/components/home/HeroSection"));
 const SearchFilters = lazy(() => import("@/components/home/SearchFilters"));
 const FeaturedCourses = lazy(() => import("@/components/home/FeaturedCourses"));
@@ -26,37 +25,39 @@ const Index = () => {
   } = useCourses();
 
   return (
-    <div className="flex min-h-screen bg-background" role="main">
+    <div className="flex min-h-screen bg-background">
       <Sidebar />
       
-      <main className="flex-1 p-8">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <Suspense fallback={<LoadingBrain />}>
-            <HeroSection />
-            
-            <SearchFilters
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              difficulty={difficulty}
-              setDifficulty={setDifficulty}
-            />
+      <div className="content-container">
+        <main className="p-8 overflow-x-hidden">
+          <div className="max-w-7xl mx-auto space-y-8">
+            <Suspense fallback={<LoadingBrain />}>
+              <HeroSection />
+              
+              <SearchFilters
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                difficulty={difficulty}
+                setDifficulty={setDifficulty}
+              />
 
-            <FeaturedCourses
-              courses={courses}
-              isLoading={isLoading}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
-            />
+              <FeaturedCourses
+                courses={courses}
+                isLoading={isLoading}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={setCurrentPage}
+              />
 
-            <AnalyticsDashboard />
+              <AnalyticsDashboard />
 
-            <FeaturesGrid />
-            
-            <CommunitySection />
-          </Suspense>
-        </div>
-      </main>
+              <FeaturesGrid />
+              
+              <CommunitySection />
+            </Suspense>
+          </div>
+        </main>
+      </div>
     </div>
   );
 };
