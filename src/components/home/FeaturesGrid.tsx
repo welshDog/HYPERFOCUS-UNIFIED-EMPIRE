@@ -1,6 +1,6 @@
 import { Brain, BookOpen, Users, Target } from "lucide-react";
 
-export const FeaturesGrid = () => (
+const FeaturesGrid = () => (
   <section className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 animate-fade-in" style={{ animationDelay: "0.4s" }}>
     {[
       {
@@ -41,3 +41,5 @@ export const FeaturesGrid = () => (
     ))}
   </section>
 );
+
+export default FeaturesGrid;

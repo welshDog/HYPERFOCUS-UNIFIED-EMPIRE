@@ -29,7 +29,7 @@ const LoadingSkeletons = memo(() => (
 
 LoadingSkeletons.displayName = "LoadingSkeletons";
 
-export const FeaturedCourses = memo(({ 
+const FeaturedCourses = memo(({ 
   courses, 
   isLoading, 
   currentPage, 
@@ -89,3 +89,5 @@ export const FeaturedCourses = memo(({
 });
 
 FeaturedCourses.displayName = "FeaturedCourses";
+
+export default FeaturedCourses;

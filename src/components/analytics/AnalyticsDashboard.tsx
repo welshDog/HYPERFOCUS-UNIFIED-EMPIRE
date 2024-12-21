@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AnalyticsChart } from "./AnalyticsChart";
 import { AnalyticsMetrics } from "./AnalyticsMetrics";
 
-export function AnalyticsDashboard() {
+const AnalyticsDashboard = () => {
   const { data: analyticsData, isLoading, error } = useQuery({
     queryKey: ["analytics"],
     queryFn: () => fetchAnalytics(),
@@ -77,4 +77,6 @@ export function AnalyticsDashboard() {
       </Tabs>
     </div>
   );
-}
+};
+
+export default AnalyticsDashboard;

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Users } from "lucide-react";
 
-export const CommunitySection = () => (
+const CommunitySection = () => (
   <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-yellow-400 to-orange-500 p-12 animate-fade-in" style={{ animationDelay: "0.6s" }}>
     <div className="relative z-10">
       <div className="flex items-center gap-3 mb-4">
@@ -27,3 +27,5 @@ export const CommunitySection = () => (
     <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-600 rounded-full -ml-48 -mb-48 blur-3xl opacity-20" />
   </section>
 );
+
+export default CommunitySection;
