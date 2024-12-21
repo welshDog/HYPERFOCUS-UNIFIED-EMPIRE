@@ -26,7 +26,7 @@ export function Sidebar() {
   return (
     <div 
       className={cn(
-        "fixed left-0 top-0 h-full z-50 flex flex-col transition-all duration-300 ease-in-out bg-white",
+        "fixed left-0 top-0 h-full z-50 flex flex-col transition-all duration-300 ease-in-out bg-white border-r",
         isHovered ? "w-64" : "w-20"
       )}
       onMouseEnter={() => setIsHovered(true)}
@@ -34,7 +34,7 @@ export function Sidebar() {
       role="navigation"
       aria-label="Main navigation"
     >
-      <div className="flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-4 border-r h-full">
+      <div className="flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-4 h-full">
         <div className="flex h-16 shrink-0 items-center">
           <Link to="/" className="flex items-center space-x-2">
             <Brain className="h-8 w-8 text-primary" />
