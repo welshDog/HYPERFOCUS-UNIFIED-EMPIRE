@@ -1,9 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import { Brain, Home, BarChart2, User, Users, Dumbbell } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 export function Sidebar() {
   const location = useLocation();
+  const [isHovered, setIsHovered] = useState(false);
   
   const navigation = [
     { name: "Home", href: "/", icon: Home },
@@ -15,12 +17,24 @@ export function Sidebar() {
   ];
 
   return (
-    <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
+    <div 
+      className={cn(
+        "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col transition-all duration-300 ease-in-out",
+        isHovered ? "lg:w-64" : "lg:w-20"
+      )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      role="navigation"
+      aria-label="Main navigation"
+    >
       <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4 border-r">
         <div className="flex h-16 shrink-0 items-center">
           <Link to="/" className="flex items-center space-x-2">
             <Brain className="h-8 w-8 text-primary" />
-            <span className="text-xl font-display font-bold gradient-text">
+            <span className={cn(
+              "text-xl font-display font-bold gradient-text transition-opacity duration-200",
+              isHovered ? "opacity-100" : "opacity-0"
+            )}>
               HyperFocus
             </span>
           </Link>
@@ -41,6 +55,7 @@ export function Sidebar() {
                             ? "bg-primary/10 text-primary font-semibold"
                             : "text-muted-foreground hover:bg-accent hover:text-foreground"
                         )}
+                        title={item.name}
                       >
                         <item.icon
                           className={cn(
@@ -49,7 +64,12 @@ export function Sidebar() {
                           )}
                           aria-hidden="true"
                         />
-                        {item.name}
+                        <span className={cn(
+                          "transition-opacity duration-200",
+                          isHovered ? "opacity-100" : "opacity-0"
+                        )}>
+                          {item.name}
+                        </span>
                       </Link>
                     </li>
                   );
