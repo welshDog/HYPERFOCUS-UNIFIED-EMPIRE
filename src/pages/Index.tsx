@@ -27,9 +27,8 @@ const Index = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      
-      <div className="content-container">
-        <main className="p-8 overflow-x-hidden">
+      <main className="content-container">
+        <div className="p-8">
           <div className="max-w-7xl mx-auto space-y-8">
             <Suspense fallback={<LoadingBrain />}>
               <HeroSection />
@@ -56,8 +55,8 @@ const Index = () => {
               <CommunitySection />
             </Suspense>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 };

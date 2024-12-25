@@ -1,19 +1,21 @@
-#root {
-  margin: 0 auto;
-  text-align: center;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sidebar-width: 5rem;
+  --sidebar-width-expanded: 16rem;
 }
 
 .content-container {
-  @apply w-[calc(100%-5rem)] min-h-screen bg-background transition-all duration-300 ease-in-out;
-  margin-left: 5rem; /* 20 in rem units */
+  @apply min-h-screen bg-background transition-all duration-300 ease-in-out;
+  margin-left: var(--sidebar-width);
+  width: calc(100% - var(--sidebar-width));
 }
 
 .content-container.sidebar-expanded {
-  @apply w-[calc(100%-16rem)];
-  margin-left: 16rem; /* 64 in rem units */
+  margin-left: var(--sidebar-width-expanded);
+  width: calc(100% - var(--sidebar-width-expanded));
 }
 
 @media (max-width: 1024px) {
