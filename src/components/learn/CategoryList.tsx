@@ -1,10 +1,7 @@
 import { CategoryCard } from "@/components/CategoryCard";
+import { type Database } from "@/integrations/supabase/types";
 
-interface Category {
-  id: string;
-  name: string;
-  description: string;
-}
+type Category = Database["public"]["Tables"]["categories"]["Row"];
 
 interface CategoryListProps {
   categories: Category[];
