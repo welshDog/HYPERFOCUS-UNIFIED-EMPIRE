@@ -34,9 +34,9 @@ export const Sidebar = () => {
         <nav className="flex-1">
           <ul className="space-y-2">
             {navigationItems.map((item) => (
-              <li key={item.path}>
+              <li key={item.href}>
                 <Link
-                  to={item.path}
+                  to={item.href}
                   className={cn(
                     "flex items-center px-2 py-2 rounded-lg transition-colors",
                     "hover:bg-gray-100 dark:hover:bg-gray-800",
