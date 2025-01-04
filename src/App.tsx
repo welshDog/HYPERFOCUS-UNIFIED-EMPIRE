@@ -5,9 +5,17 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, useRoutes } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { AppErrorBoundary } from "@/components/AppErrorBoundary";
 import { routes } from "@/config/routes";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const AppRoutes = () => {
   const element = useRoutes(routes);
@@ -19,9 +27,11 @@ const AppContent = () => {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <AppRoutes />
+          <AppErrorBoundary>
+            <Toaster />
+            <Sonner />
+            <AppRoutes />
+          </AppErrorBoundary>
         </TooltipProvider>
       </AuthProvider>
     </QueryClientProvider>
