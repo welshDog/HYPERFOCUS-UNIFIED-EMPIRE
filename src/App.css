@@ -3,22 +3,23 @@
 @tailwind utilities;
 
 :root {
-  --sidebar-width: 5rem;
-  --sidebar-width-expanded: 16rem;
+  --sidebar-width: 16rem;
+  --sidebar-width-collapsed: 5rem;
 }
 
 .content-container {
-  @apply min-h-screen bg-background transition-all duration-300 ease-in-out;
+  @apply min-h-screen bg-background;
+  margin-left: var(--sidebar-width-collapsed);
+  transition: margin-left 0.3s ease-in-out;
+  width: calc(100% - var(--sidebar-width-collapsed));
+}
+
+.sidebar-expanded .content-container {
   margin-left: var(--sidebar-width);
   width: calc(100% - var(--sidebar-width));
 }
 
-.content-container.sidebar-expanded {
-  margin-left: var(--sidebar-width-expanded);
-  width: calc(100% - var(--sidebar-width-expanded));
-}
-
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .content-container {
     @apply w-full;
     margin-left: 0;

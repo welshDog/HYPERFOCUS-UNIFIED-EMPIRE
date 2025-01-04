@@ -11,7 +11,6 @@ const CommunitySection = lazy(() => import("@/components/home/CommunitySection")
 const AnalyticsDashboard = lazy(() => import("@/components/analytics/AnalyticsDashboard"));
 
 const Index = () => {
-  console.log("Index component rendering");
   const {
     courses,
     isLoading,
