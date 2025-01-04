@@ -11,7 +11,7 @@ export const Sidebar = () => {
   return (
     <div 
       className={cn(
-        "fixed left-0 top-0 h-full z-40 flex flex-col transition-all duration-300 ease-in-out bg-white border-r",
+        "fixed left-0 top-0 h-full z-40 flex flex-col transition-all duration-300 ease-in-out bg-white border-r shadow-sm",
         isHovered ? "w-64" : "w-20"
       )}
       onMouseEnter={() => setIsHovered(true)}
@@ -24,7 +24,7 @@ export const Sidebar = () => {
           <Link to="/" className="flex items-center space-x-2">
             <Brain className="h-8 w-8 text-primary" />
             <span className={cn("font-semibold text-xl transition-opacity", 
-              isHovered ? "opacity-100" : "opacity-0"
+              isHovered ? "opacity-100" : "opacity-0 w-0"
             )}>
               HyperStudy
             </span>
