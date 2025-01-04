@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@/lib/test-utils'
-import { CategoryList } from '../CategoryList'
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@/lib/test-utils';
+import { CategoryList } from '../CategoryList';
 
 const mockCategories = [
   {
@@ -9,7 +10,7 @@ const mockCategories = [
     icon: 'brain',
     created_at: new Date().toISOString()
   }
-]
+];
 
 describe('CategoryList', () => {
   it('renders categories correctly', () => {
@@ -20,13 +21,13 @@ describe('CategoryList', () => {
         onCategorySelect={() => {}}
         courseCount={() => 0}
       />
-    )
+    );
 
-    expect(screen.getByText('Test Category')).toBeInTheDocument()
-  })
+    expect(screen.getByText('Test Category')).toBeInTheDocument();
+  });
 
   it('calls onCategorySelect when clicking a category', () => {
-    const mockOnSelect = jest.fn()
+    const mockOnSelect = vi.fn();
     render(
       <CategoryList
         categories={mockCategories}
@@ -34,9 +35,9 @@ describe('CategoryList', () => {
         onCategorySelect={mockOnSelect}
         courseCount={() => 0}
       />
-    )
+    );
 
-    fireEvent.click(screen.getByText('Test Category'))
-    expect(mockOnSelect).toHaveBeenCalledWith('1')
-  })
-})
+    fireEvent.click(screen.getByText('Test Category'));
+    expect(mockOnSelect).toHaveBeenCalledWith('1');
+  });
+});
