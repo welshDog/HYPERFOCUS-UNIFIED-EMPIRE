@@ -208,6 +208,7 @@ export type Database = {
           duration: number
           id: string
           notes: string | null
+          session_name: string | null
           user_id: string
         }
         Insert: {
@@ -216,6 +217,7 @@ export type Database = {
           duration: number
           id?: string
           notes?: string | null
+          session_name?: string | null
           user_id: string
         }
         Update: {
@@ -224,6 +226,7 @@ export type Database = {
           duration?: number
           id?: string
           notes?: string | null
+          session_name?: string | null
           user_id?: string
         }
         Relationships: []
@@ -266,6 +269,38 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          id: string
+          is_read: boolean | null
+          message: string
+          trigger_time: string
+          user_id: string | null
+        }
+        Insert: {
+          id?: string
+          is_read?: boolean | null
+          message: string
+          trigger_time: string
+          user_id?: string | null
+        }
+        Update: {
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          trigger_time?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
           content: string
@@ -300,6 +335,41 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      preferences: {
+        Row: {
+          focus_mode: string | null
+          id: string
+          notifications: boolean | null
+          theme: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          focus_mode?: string | null
+          id?: string
+          notifications?: boolean | null
+          theme?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          focus_mode?: string | null
+          id?: string
+          notifications?: boolean | null
+          theme?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -418,6 +488,41 @@ export type Database = {
         }
         Relationships: []
       }
+      progress_tracker: {
+        Row: {
+          date: string
+          focus_minutes: number | null
+          id: string
+          streak: number | null
+          tasks_completed: number | null
+          user_id: string | null
+        }
+        Insert: {
+          date: string
+          focus_minutes?: number | null
+          id?: string
+          streak?: number | null
+          tasks_completed?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          date?: string
+          focus_minutes?: number | null
+          id?: string
+          streak?: number | null
+          tasks_completed?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "progress_tracker_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shared_layouts: {
         Row: {
           created_at: string
@@ -453,6 +558,47 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      tasks: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          due_date: string | null
+          id: string
+          is_completed: boolean | null
+          priority: string | null
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          is_completed?: boolean | null
+          priority?: string | null
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          is_completed?: boolean | null
+          priority?: string | null
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_progress: {
         Row: {
@@ -495,6 +641,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      users: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          profile_picture: string | null
+          username: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          profile_picture?: string | null
+          username: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          profile_picture?: string | null
+          username?: string
+        }
+        Relationships: []
       }
     }
     Views: {

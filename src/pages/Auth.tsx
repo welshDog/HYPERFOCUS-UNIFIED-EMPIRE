@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function AuthPage() {
   const navigate = useNavigate();
@@ -18,12 +19,21 @@ export default function AuthPage() {
   }, [session, navigate]);
 
   const handleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-    });
-    
-    if (error) {
-      console.error('Error logging in:', error.message);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+        }
+      });
+      
+      if (error) {
+        console.error('Error logging in:', error.message);
+        toast.error('Failed to login: ' + error.message);
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      toast.error('An unexpected error occurred during login');
     }
   };
 
@@ -45,6 +55,8 @@ export default function AuthPage() {
                 }
               }
             }}
+            theme="light"
+            providers={["google"]}
           />
           <div className="text-center">
             <Button 
