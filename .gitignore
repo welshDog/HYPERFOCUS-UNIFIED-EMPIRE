@@ -1,0 +1,25 @@
+﻿# BROski Bot .gitignore file
+
+# Config files with sensitive API keys
+config.json
+
+# Logs
+logs/
+*.log
+
+# Cache files
+__pycache__/
+*.py[cod]
+*.class
+
+# Virtual environment
+venv/
+env/
+
+# Data files
+*.csv
+*.pkl
+
+# Other
+.DS_Store
+.env

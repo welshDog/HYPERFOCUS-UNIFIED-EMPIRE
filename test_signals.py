@@ -1,0 +1,275 @@
+import pandas as pd
+import numpy as np
+import json
+import ccxt
+import matplotlib.pyplot as plt
+from pathlib import Path
+from colorama import init, Fore, Style
+
+# Add path fixing for imports
+import sys
+import os
+from pathlib import Path
+
+# Ensure we can import from any directory
+project_root = Path(__file__).resolve().parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
+
+
+# Initialize colorama
+init()
+
+def load_config():
+    """Load bot configuration"""
+    config_path = Path("config.json")
+    if not config_path.exists():
+        print(f"{Fore.RED}Config file not found!{Style.RESET_ALL}")
+        return None
+        
+    with open(config_path, 'r') as f:
+        return json.load(f)
+
+def fetch_data(config, limit=100):
+    """Fetch historical data from MEXC"""
+    try:
+        # Setup exchange
+        exchange = ccxt.mexc({
+            'apiKey': config['exchange']['api_key'],
+            'secret': config['exchange']['api_secret'],
+            'enableRateLimit': True,
+        })
+        
+        # Get trading pair
+        base = config["trading"]["base_symbol"]
+        quote = config["trading"]["quote_symbol"]
+        symbol = f"{base}/{quote}"
+        
+        # Get strategy config
+        active_strategy = config["strategies"]["active_strategy"]
+        strategy_config = config["strategies"][active_strategy]
+        timeframe = strategy_config["timeframe"]
+        
+        print(f"{Fore.CYAN}Fetching {timeframe} candles for {symbol}...{Style.RESET_ALL}")
+        ohlcv = exchange.fetch_ohlcv(symbol, timeframe, limit=limit)
+        
+        df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+        df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+        df.set_index('timestamp', inplace=True)
+        
+        print(f"{Fore.GREEN}Fetched {len(df)} candles{Style.RESET_ALL}")
+        return df, symbol, active_strategy, strategy_config
+    except Exception as e:
+        print(f"{Fore.RED}Error fetching data: {str(e)}{Style.RESET_ALL}")
+        return None, None, None, None
+
+def calculate_indicators(df, active_strategy, strategy_config):
+    """Calculate indicators based on strategy"""
+    try:
+        if active_strategy == "rsi_strategy":
+            # Calculate RSI
+            rsi_period = strategy_config["rsi_period"]
+            delta = df['close'].diff()
+            gain = delta.where(delta > 0, 0)
+            loss = -delta.where(delta < 0, 0)
+            
+            avg_gain = gain.rolling(window=rsi_period).mean()
+            avg_loss = loss.rolling(window=rsi_period).mean()
+            
+            rs = avg_gain / avg_loss
+            df['rsi'] = 100 - (100 / (1 + rs))
+            
+            print(f"{Fore.CYAN}Current RSI: {df['rsi'].iloc[-1]:.2f}{Style.RESET_ALL}")
+            
+        elif active_strategy == "macd_strategy":
+            # Calculate MACD
+            fast = strategy_config["fast_period"]
+            slow = strategy_config["slow_period"]
+            signal_period = strategy_config["signal_period"]
+            
+            df['ema_fast'] = df['close'].ewm(span=fast, adjust=False).mean()
+            df['ema_slow'] = df['close'].ewm(span=slow, adjust=False).mean()
+            df['macd_line'] = df['ema_fast'] - df['ema_slow']
+            df['signal_line'] = df['macd_line'].ewm(span=signal_period, adjust=False).mean()
+            df['macd_histogram'] = df['macd_line'] - df['signal_line']
+            
+            print(f"{Fore.CYAN}Current MACD Line: {df['macd_line'].iloc[-1]:.6f}{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}Current Signal Line: {df['signal_line'].iloc[-1]:.6f}{Style.RESET_ALL}")
+        
+        return df
+    except Exception as e:
+        print(f"{Fore.RED}Error calculating indicators: {str(e)}{Style.RESET_ALL}")
+        return df
+
+def find_signals(df, active_strategy, strategy_config):
+    """Find trading signals in historical data"""
+    signals = []
+    
+    try:
+        if active_strategy == "rsi_strategy":
+            overbought = strategy_config["rsi_overbought"]
+            oversold = strategy_config["rsi_oversold"]
+            
+            for i in range(1, len(df)):
+                # Buy signal - RSI crosses above oversold
+                if df['rsi'].iloc[i-1] < oversold and df['rsi'].iloc[i] >= oversold:
+                    signals.append({
+                        'timestamp': df.index[i],
+                        'type': 'BUY',
+                        'price': df['close'].iloc[i],
+                        'rsi': df['rsi'].iloc[i]
+                    })
+                
+                # Sell signal - RSI crosses below overbought
+                elif df['rsi'].iloc[i-1] > overbought and df['rsi'].iloc[i] <= overbought:
+                    signals.append({
+                        'timestamp': df.index[i],
+                        'type': 'SELL',
+                        'price': df['close'].iloc[i],
+                        'rsi': df['rsi'].iloc[i]
+                    })
+        
+        elif active_strategy == "macd_strategy":
+            for i in range(1, len(df)):
+                # Buy signal - MACD crosses above signal line
+                if df['macd_line'].iloc[i-1] < df['signal_line'].iloc[i-1] and \
+                   df['macd_line'].iloc[i] > df['signal_line'].iloc[i]:
+                    signals.append({
+                        'timestamp': df.index[i],
+                        'type': 'BUY',
+                        'price': df['close'].iloc[i],
+                        'macd': df['macd_line'].iloc[i],
+                        'signal': df['signal_line'].iloc[i]
+                    })
+                
+                # Sell signal - MACD crosses below signal line
+                elif df['macd_line'].iloc[i-1] > df['signal_line'].iloc[i-1] and \
+                     df['macd_line'].iloc[i] < df['signal_line'].iloc[i]:
+                    signals.append({
+                        'timestamp': df.index[i],
+                        'type': 'SELL',
+                        'price': df['close'].iloc[i],
+                        'macd': df['macd_line'].iloc[i],
+                        'signal': df['signal_line'].iloc[i]
+                    })
+        
+        return signals
+    except Exception as e:
+        print(f"{Fore.RED}Error finding signals: {str(e)}{Style.RESET_ALL}")
+        return []
+
+def plot_results(df, signals, symbol, active_strategy):
+    """Plot price and indicators with signals"""
+    try:
+        # Create figure
+        plt.figure(figsize=(14, 10))
+        
+        # Price plot
+        ax1 = plt.subplot(2, 1, 1)
+        ax1.plot(df.index, df['close'], label='Price', color='blue')
+        ax1.set_title(f"{symbol} - {active_strategy}")
+        ax1.grid(True)
+        
+        # Plot buy signals
+        buy_signals = [s for s in signals if s['type'] == 'BUY']
+        sell_signals = [s for s in signals if s['type'] == 'SELL']
+        
+        if buy_signals:
+            ax1.scatter(
+                [s['timestamp'] for s in buy_signals], 
+                [s['price'] for s in buy_signals], 
+                color='green', marker='^', s=100, label='Buy'
+            )
+        
+        if sell_signals:
+            ax1.scatter(
+                [s['timestamp'] for s in sell_signals], 
+                [s['price'] for s in sell_signals], 
+                color='red', marker='v', s=100, label='Sell'
+            )
+        
+        ax1.legend()
+        
+        # Indicator plot
+        ax2 = plt.subplot(2, 1, 2, sharex=ax1)
+        
+        if active_strategy == "rsi_strategy":
+            ax2.plot(df.index, df['rsi'], label='RSI', color='purple')
+            ax2.axhline(y=70, color='r', linestyle='--')
+            ax2.axhline(y=30, color='g', linestyle='--')
+            ax2.set_ylim(0, 100)
+            ax2.set_title('RSI Indicator')
+            
+        elif active_strategy == "macd_strategy":
+            ax2.plot(df.index, df['macd_line'], label='MACD', color='blue')
+            ax2.plot(df.index, df['signal_line'], label='Signal', color='red')
+            ax2.bar(df.index, df['macd_histogram'], label='Histogram', color='green', alpha=0.5)
+            ax2.set_title('MACD Indicator')
+        
+        ax2.grid(True)
+        ax2.legend()
+        
+        # Format and show
+        plt.tight_layout()
+        plt.show()
+        
+    except Exception as e:
+        print(f"{Fore.RED}Error plotting results: {str(e)}{Style.RESET_ALL}")
+
+def main():
+    """Main function to test trading signals"""
+    print(f"{Fore.CYAN}BROski Trading Bot - Signal Tester{Style.RESET_ALL}")
+    
+    # Load configuration
+    config = load_config()
+    if not config:
+        return
+    
+    # Fetch data
+    df, symbol, active_strategy, strategy_config = fetch_data(config, limit=100)
+    if df is None:
+        return
+    
+    # Calculate indicators
+    df = calculate_indicators(df, active_strategy, strategy_config)
+    
+    # Find signals
+    signals = find_signals(df, active_strategy, strategy_config)
+    
+    # Display signals
+    print(f"\n{Fore.CYAN}Found {len(signals)} trading signals:{Style.RESET_ALL}")
+    for i, signal in enumerate(signals[-10:], 1):  # Show last 10 signals
+        color = Fore.GREEN if signal['type'] == 'BUY' else Fore.RED
+        print(f"{i}. {color}{signal['type']}{Style.RESET_ALL} at {signal['timestamp']} - Price: {signal['price']}")
+    
+    # Plot results
+    plot_results_option = input("\nDo you want to see the chart with signals? (y/n): ").lower() == 'y'
+    if plot_results_option:
+        plot_results(df, signals, symbol, active_strategy)
+    
+    # Backtest option
+    backtest_option = input("\nDo you want to run a simple backtest? (y/n): ").lower() == 'y'
+    if backtest_option:
+        print(f"\n{Fore.YELLOW}Simple backtest results:{Style.RESET_ALL}")
+        
+        # Very basic backtest - just prints signal results
+        total_pnl = 0
+        trade_amount = config["trading"]["trade_amount"]
+        last_buy_price = None
+        
+        for signal in signals:
+            if signal['type'] == 'BUY':
+                last_buy_price = signal['price']
+                print(f"{Fore.GREEN}BUY{Style.RESET_ALL} at {signal['timestamp']} - Price: {signal['price']}")
+                
+            elif signal['type'] == 'SELL' and last_buy_price is not None:
+                pnl = ((signal['price'] - last_buy_price) / last_buy_price) * trade_amount
+                total_pnl += pnl
+                print(f"{Fore.RED}SELL{Style.RESET_ALL} at {signal['timestamp']} - Price: {signal['price']} - PnL: {pnl:.2f} {config['trading']['quote_symbol']}")
+                last_buy_price = None
+        
+        print(f"\nTotal PnL: {Fore.GREEN if total_pnl >= 0 else Fore.RED}{total_pnl:.2f}{Style.RESET_ALL} {config['trading']['quote_symbol']}")
+
+if __name__ == "__main__":
+    main()

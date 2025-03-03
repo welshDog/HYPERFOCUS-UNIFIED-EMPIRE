@@ -1,0 +1,220 @@
+# train_model.py
+
+import os
+import numpy as np
+import pandas as pd
+import json
+import logging
+from pathlib import Path
+import matplotlib.pyplot as plt
+import pickle
+
+# ML Imports
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import mean_absolute_error, r2_score
+import tensorflow as tf # type: ignore
+from tensorflow.keras.models import Sequential # type: ignore
+from tensorflow.keras.layers import LSTM, Dense, Dropout, Bidirectional # type: ignore
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint # type: ignore
+import ccxt
+
+# Add path fixing for imports
+import sys
+import os
+from pathlib import Path
+
+# Ensure we can import from any directory
+project_root = Path(__file__).resolve().parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
+
+
+# Set up logging
+logging.basicConfig(
+    filename="training.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
+
+class MLModelTrainer:
+    """Trains an enhanced LSTM-based model for price prediction"""
+
+    def __init__(self):
+        self.config_file = Path("config.json")
+        if self.config_file.exists():
+            with open(self.config_file, 'r') as f:
+                self.config = json.load(f)
+        else:
+            logger.error("Config file not found!")
+            raise FileNotFoundError("Config file not found.")
+
+        # Model parameters
+        self.sequence_length = 60
+        self.prediction_steps = 1
+        self.epochs = 100
+        self.batch_size = 32
+
+        # Ensure directories exist
+        os.makedirs("models", exist_ok=True)
+        os.makedirs("data", exist_ok=True)
+
+    def download_training_data(self):
+        """Downloads price data and logs the process"""
+        try:
+            exchange = ccxt.mexc({'enableRateLimit': True})
+            base = self.config["trading"]["base_symbol"]
+            quote = self.config["trading"]["quote_symbol"]
+            symbol = f"{base}/{quote}"
+
+            logger.info(f"Fetching data for {symbol}...")
+            ohlcv = exchange.fetch_ohlcv(symbol, '1h', limit=2000)
+            df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+            df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+            df.set_index('timestamp', inplace=True)
+
+            # Save dataset
+            data_path = "data/historical_prices.csv"
+            df.to_csv(data_path)
+            logger.info(f"Data saved to {data_path}")
+
+            return df
+
+        except Exception as e:
+            logger.error(f"Error downloading data: {str(e)}")
+            return None
+
+    def preprocess_data(self, df):
+        """Preprocess data for training"""
+        df["returns"] = df["close"].pct_change()
+        df["ma_5"] = df["close"].rolling(window=5).mean()
+        df["ma_20"] = df["close"].rolling(window=20).mean()
+        df["volatility"] = df["returns"].rolling(window=20).std()
+        df["momentum_10"] = df["close"].diff(10)
+        # Additional technical indicators
+        df['ema_10'] = df['close'].ewm(span=10).mean()
+        df['rsi_14'] = self.calculate_rsi(df['close'], window=14)
+
+        df.dropna(inplace=True)
+
+        feature_columns = ["close", "volume", "returns", "ma_5", "ma_20", "volatility", "momentum_10", "ema_10", "rsi_14"]
+        data = df[feature_columns].values
+
+        # Split data into training and testing sets
+        split_index = int(len(data) * 0.8)
+        train_data = data[:split_index]
+        test_data = data[split_index - self.sequence_length:]
+
+        # Scaling
+        scaler = MinMaxScaler()
+        train_data_scaled = scaler.fit_transform(train_data)
+        test_data_scaled = scaler.transform(test_data)
+
+        # Save scaler
+        with open("models/scaler.pkl", "wb") as f:
+            pickle.dump(scaler, f)
+
+        # Create sequences
+        X_train, y_train = self.create_sequences(train_data_scaled)
+        X_test, y_test = self.create_sequences(test_data_scaled)
+
+        return X_train, y_train, X_test, y_test
+
+    def calculate_rsi(self, series, window=14):
+        delta = series.diff()
+        gain = (delta.where(delta > 0, 0)).fillna(0)
+        loss = (-delta.where(delta < 0, 0)).fillna(0)
+        avg_gain = gain.rolling(window).mean()
+        avg_loss = loss.rolling(window).mean()
+        rs = avg_gain / avg_loss
+        rsi = 100 - 100 / (1 + rs)
+        return rsi
+
+    def create_sequences(self, data):
+        X = []
+        y = []
+        for i in range(self.sequence_length, len(data)):
+            X.append(data[i - self.sequence_length:i])
+            y.append(data[i, 0])  # Predicting the 'close' price
+        X = np.array(X)
+        y = np.array(y)
+        return X, y
+
+    def build_model(self, input_shape):
+        """Build enhanced LSTM model"""
+        model = Sequential()
+        model.add(Bidirectional(LSTM(64, return_sequences=True), input_shape=input_shape))
+        model.add(Dropout(0.2))
+        model.add(Bidirectional(LSTM(32)))
+        model.add(Dropout(0.2))
+        model.add(Dense(1))
+        model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mae'])
+        return model
+
+    def train(self):
+        """Main training function"""
+        logger.info("Starting ML training process...")
+        df = self.download_training_data()
+        if df is None:
+            logger.error("Training aborted: No data available")
+            return False
+
+        X_train, y_train, X_test, y_test = self.preprocess_data(df)
+        input_shape = (X_train.shape[1], X_train.shape[2])
+        model = self.build_model(input_shape)
+
+        # Callbacks
+        early_stopping = EarlyStopping(monitor='val_loss', patience=10)
+        model_checkpoint = ModelCheckpoint('models/best_model.h5', save_best_only=True)
+
+        history = model.fit(
+            X_train, y_train,
+            epochs=self.epochs,
+            batch_size=self.batch_size,
+            validation_data=(X_test, y_test),
+            callbacks=[early_stopping, model_checkpoint]
+        )
+
+        # Load the best model
+        model.load_weights('models/best_model.h5')
+
+        # Evaluate model
+        y_pred = model.predict(X_test)
+        y_test_unscaled = self.unscale_y(y_test)
+        y_pred_unscaled = self.unscale_y(y_pred)
+
+        mae = mean_absolute_error(y_test_unscaled, y_pred_unscaled)
+        r2 = r2_score(y_test_unscaled, y_pred_unscaled)
+        logger.info(f"Test MAE: {mae}, R-squared: {r2}")
+
+        # Save the final model
+        model.save("models/final_model.h5")
+        logger.info("Model training completed and saved successfully.")
+
+        # Plot training history
+        self.plot_training_history(history)
+
+        return True
+
+    def unscale_y(self, y_scaled):
+        # Load scaler
+        with open("models/scaler.pkl", "rb") as f:
+            scaler = pickle.load(f)
+        y_unscaled = scaler.inverse_transform(np.concatenate([y_scaled, np.zeros((len(y_scaled), scaler.n_features_in_ - 1))], axis=1))[:, 0]
+        return y_unscaled
+
+    def plot_training_history(self, history):
+        plt.figure(figsize=(10, 6))
+        plt.plot(history.history['loss'], label='Training Loss')
+        plt.plot(history.history['val_loss'], label='Validation Loss')
+        plt.title('Model Loss During Training')
+        plt.xlabel('Epochs')
+        plt.ylabel('Loss')
+        plt.legend()
+        plt.savefig('models/training_history.png')
+        logger.info("Training history plot saved.")
+
+if __name__ == "__main__":
+    trainer = MLModelTrainer()
+    trainer.train()

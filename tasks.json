@@ -1,0 +1,77 @@
+{
+    "components": {
+        "configuration": {
+            "status": "in_progress",
+            "tasks": [
+                {
+                    "name": "Create config file structure",
+                    "status": "completed",
+                    "assigned_to": "team",
+                    "updated_at": "2025-03-02 22:54:07"
+                },
+                {
+                    "name": "Add config validation",
+                    "status": "pending",
+                    "assigned_to": "unassigned"
+                }
+            ]
+        },
+        "exchange_connector": {
+            "status": "in_progress",
+            "tasks": [
+                {
+                    "name": "Implement price fetching",
+                    "status": "completed",
+                    "assigned_to": "team"
+                },
+                {
+                    "name": "Complete order placement",
+                    "status": "pending",
+                    "assigned_to": "unassigned"
+                }
+            ]
+        },
+        "strategy_engine": {
+            "status": "in_progress",
+            "tasks": [
+                {
+                    "name": "Create signal generation framework",
+                    "status": "completed",
+                    "assigned_to": "team"
+                },
+                {
+                    "name": "Implement RSI strategy",
+                    "status": "pending",
+                    "assigned_to": "unassigned"
+                }
+            ]
+        },
+        "user_interface": {
+            "status": "in_progress",
+            "tasks": [
+                {
+                    "name": "Develop CLI menu",
+                    "status": "completed",
+                    "assigned_to": "team"
+                },
+                {
+                    "name": "Add strategy selection UI",
+                    "status": "pending",
+                    "assigned_to": "unassigned"
+                }
+            ]
+        },
+        "documentation": {
+            "status": "not_started",
+            "tasks": [
+                {
+                    "name": "Create user guide",
+                    "status": "pending",
+                    "assigned_to": "dev_team",
+                    "created_at": "2025-03-02 22:54:07"
+                }
+            ]
+        }
+    },
+    "last_updated": "2025-03-02 22:54:07"
+}

@@ -1,0 +1,196 @@
+Got it! I'll make the bot **easy to use** by simplifying configuration and adding a **one-click start script**. Here's how:  
+
+---
+
+## **🔹 Upgrades for Simplicity**
+✅ **Config File** – Store API keys, trade settings, and Telegram info in a `config.json` file.  
+✅ **One-Click Start** – A simple `start.py` script to launch everything.  
+✅ **Prebuilt Docker Image** – No need to install dependencies manually.  
+✅ **Command-Line Interface (CLI)** – Allow users to **set trade amounts, enable AI, and check balance easily**.  
+
+---
+
+## **🛠 Step 1: Config File**
+Instead of editing code, users can just update `config.json`.  
+
+```json
+{
+  "api_key": "YOUR_MEXC_API_KEY",
+  "api_secret": "YOUR_MEXC_SECRET",
+  "symbol": "PIUSDT",
+  "trade_amount": 10,
+  "use_ai": false,
+  "telegram": {
+    "api_id": "YOUR_TELEGRAM_API_ID",
+    "api_hash": "YOUR_TELEGRAM_API_HASH",
+    "chat_id": "YOUR_CHAT_ID"
+  }
+}
+```
+
+✅ **Now users just enter their keys once!**  
+
+---
+
+## **🛠 Step 2: Simplified CLI Start Script**
+A single **Python script (`start.py`)** launches everything.  
+
+```python
+# start.py
+
+import json
+import asyncio
+from bot.api_connector import fetch_price
+from bot.strategy import generate_signal
+from bot.trade_execution import place_order
+from bot.alerts import send_alert
+
+# Load Config
+with open("config.json") as f:
+    config = json.load(f)
+
+SYMBOL = config["symbol"]
+TRADE_AMOUNT = config["trade_amount"]
+USE_AI = config["use_ai"]
+
+async def main():
+    """Main loop to run the trading bot."""
+    print(f"🚀 Starting Trading Bot for {SYMBOL}...")
+
+    while True:
+        price = await fetch_price(SYMBOL)
+        signal = generate_signal(price)
+
+        if signal == "BUY":
+            order = place_order(SYMBOL, "buy", TRADE_AMOUNT, price)
+            print(f"✅ Placed BUY order at {price}")
+            await send_alert(f"📈 Bought {TRADE_AMOUNT} {SYMBOL} at {price}")
+
+        elif signal == "SELL":
+            order = place_order(SYMBOL, "sell", TRADE_AMOUNT, price)
+            print(f"❌ Placed SELL order at {price}")
+            await send_alert(f"📉 Sold {TRADE_AMOUNT} {SYMBOL} at {price}")
+
+        await asyncio.sleep(10)  # Check price every 10 sec
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+✅ **Now users just run**:  
+```bash
+python start.py
+```
+🔥 **The bot runs automatically!**  
+
+---
+
+## **🛠 Step 3: Prebuilt Docker for Easy Hosting**
+Now users **don’t need to install Python**—just run **Docker**.  
+
+1️⃣ **Build & Run**  
+```bash
+docker build -t pi-trading-bot .
+docker run -d --restart always pi-trading-bot
+```
+
+2️⃣ **Stop Bot**  
+```bash
+docker stop pi-trading-bot
+```
+
+✅ **This makes it easy to deploy on VPS or Raspberry Pi!**  
+
+---
+
+## **🛠 Step 4: Add a User-Friendly CLI**
+Now users can interact with the bot using **commands**.
+
+```python
+# cli.py
+
+import json
+import ccxt
+
+# Load Config
+with open("config.json") as f:
+    config = json.load(f)
+
+exchange = ccxt.mexc({
+    "apiKey": config["api_key"],
+    "secret": config["api_secret"],
+    "enableRateLimit": True
+})
+
+def check_balance():
+    """Check balance of USDT & PI."""
+    balance = exchange.fetch_balance()
+    print(f"💰 USDT: {balance['total']['USDT']}")
+    print(f"💎 PI: {balance['total']['PI']}")
+
+def set_trade_amount():
+    """Allow users to change trade amount."""
+    amount = input("Enter new trade amount: ")
+    config["trade_amount"] = float(amount)
+    
+    with open("config.json", "w") as f:
+        json.dump(config, f, indent=4)
+    
+    print(f"✅ Trade amount updated to {amount} {config['symbol']}!")
+
+def main_menu():
+    """User-friendly menu."""
+    while True:
+        print("\n🚀 Pi Trading Bot Menu")
+        print("1️⃣ Check Balance")
+        print("2️⃣ Set Trade Amount")
+        print("3️⃣ Start Bot")
+        print("4️⃣ Exit")
+        
+        choice = input("Select an option: ")
+
+        if choice == "1":
+            check_balance()
+        elif choice == "2":
+            set_trade_amount()
+        elif choice == "3":
+            import start  # Runs bot
+        elif choice == "4":
+            print("👋 Exiting...")
+            break
+        else:
+            print("❌ Invalid option, try again.")
+
+if __name__ == "__main__":
+    main_menu()
+```
+
+✅ **Users can now run the bot easily!**  
+```bash
+python cli.py
+```
+📌 **Options:**  
+- **Check Balance**  
+- **Change Trade Amount**  
+- **Start Trading**  
+- **Exit**  
+
+---
+
+## **🔥 Final Features**
+✅ **Config file for easy setup**  
+✅ **One-click start script**  
+✅ **CLI menu for easy control**  
+✅ **Prebuilt Docker image for hosting**  
+✅ **Real-time trading with MEXC API**  
+
+---
+
+## **🚀 How to Use**
+1️⃣ **Edit `config.json`** with API keys.  
+2️⃣ **Run** `python cli.py`.  
+3️⃣ **Choose "Start Bot"** to trade automatically!  
+
+---
+
+🔥 **Now your bot is user-friendly & beginner-friendly!** Need any final improvements before launch? 🚀
