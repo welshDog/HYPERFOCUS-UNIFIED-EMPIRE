@@ -1,0 +1,381 @@
+# 🚀💎 HYPERFOCUS UNIFIED EMPIRE 💎🚀
+# Legendary .gitignore for neurodivergent-friendly development
+
+# 🔐 Security & Secrets
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.key
+*.pem
+*.p12
+secrets/
+config/secrets/
+**/secrets/
+**/*.secret
+.secrets
+
+# 🐍 Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 🔬 Python Testing & Coverage
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+coverage.xml
+*.cover
+.hypothesis/
+htmlcov/
+.tox/
+.nox/
+
+# 📦 Node.js & NPM
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.npm
+.eslintcache
+.yarn-integrity
+.parcel-cache
+
+# 🏗️ Build Outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+.vuepress/dist
+.serverless/
+.fusebox/
+.dynamodb/
+
+# 🔧 Development Tools
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 🗄️ Databases
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+
+# 📊 Logs & Temporary Files
+*.log
+logs/
+*.tmp
+*.temp
+.temp/
+tmp/
+
+# 🚀 Redis & Cache
+dump.rdb
+*.rdb
+.redis/
+
+# 🐳 Docker
+.dockerignore
+docker-compose.override.yml
+.docker/
+
+# ☁️ Cloud & Deployment
+.serverless/
+.amplify/
+.vercel/
+.netlify/
+
+# 📱 Mobile Development
+*.mobileprovision
+*.p12
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# 🎮 Game Development
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+# 🧪 Testing
+test-results/
+playwright-report/
+test-output/
+
+# 📊 Analytics & Monitoring
+.nyc_output/
+coverage/
+*.lcov
+
+# 🔄 Version Control
+.svn/
+.hg/
+.bzr/
+
+# 🎨 Design Files
+*.psd
+*.ai
+*.sketch
+*.fig
+*.xd
+
+# 📹 Media Files (Large)
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.mp3
+*.wav
+*.flac
+
+# 📁 Backup Files
+*.bak
+*.backup
+*.old
+*~
+
+# 🧠 ADHD-Friendly: Ignore Common Distraction Files
+TODO.md
+NOTES.md
+RANDOM_THOUGHTS.md
+BRAIN_DUMP.md
+scratch/
+sandbox/
+experiments/
+playground/
+
+# 🎯 Focus Session Data
+.focus-sessions/
+.pomodoro-data/
+.time-tracking/
+
+# 📊 Empire-Specific Data
+🛠️ DEVELOPMENT/data/
+🛠️ DEVELOPMENT/logs/
+🛠️ DEVELOPMENT/cache/
+🛠️ DEVELOPMENT/temp/
+🛠️ DEVELOPMENT/backup/
+
+# 🤖 AI Agent Runtime Data
+🤖 AI-AGENTS/*/data/
+🤖 AI-AGENTS/*/logs/
+🤖 AI-AGENTS/*/cache/
+🤖 AI-AGENTS/*/sessions/
+
+# 🎮 Application-Specific
+🎮 APPLICATIONS/*/dist/
+🎮 APPLICATIONS/*/build/
+🎮 APPLICATIONS/*/node_modules/
+🎮 APPLICATIONS/*/.next/
+🎮 APPLICATIONS/*/.nuxt/
+
+# 🚀 Core Systems Runtime
+🚀 CORE-SYSTEMS/*/data/
+🚀 CORE-SYSTEMS/*/logs/
+🚀 CORE-SYSTEMS/*/cache/
+
+# 🧠 Neurodivergent Tools Data
+🧠 NEURODIVERGENT-TOOLS/*/user-data/
+🧠 NEURODIVERGENT-TOOLS/*/sessions/
+🧠 NEURODIVERGENT-TOOLS/*/preferences/
+
+# 📚 Archive Protection (Keep these in git)
+!📚 VERSION-ARCHIVE/
+!📚 VERSION-ARCHIVE/**
+
+# 📖 Documentation Build
+📖 DOCUMENTATION/build/
+📖 DOCUMENTATION/site/
+
+# 🔧 Development Environment
+.venv/
+venv/
+env/
+ENV/
+.conda/
+.pipenv/
+
+# 🎪 Jupyter Notebooks Checkpoints
+.ipynb_checkpoints/
+
+# 🗜️ Compression
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# 🎨 CSS & SASS
+.sass-cache/
+*.css.map
+*.sass.map
+*.scss.map
+
+# 📱 React Native
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+.expo/
+
+# 🌐 Web Development
+.next/
+.nuxt/
+.vuepress/dist
+.serverless/
+
+# 🚀 Deployment Artifacts
+deploy/
+deployment/
+.deployment/
+
+# 🔍 Search Indexes
+.search/
+search-index/
+🛠️ DEVELOPMENT/data/search_index/
+
+# 📊 Metrics & Analytics
+metrics/
+analytics/
+stats/
+
+# 🎵 Audio Files (Focus Sounds)
+*.mp3
+*.wav
+*.ogg
+*.m4a
+# But keep small notification sounds
+!**/sounds/notification*.mp3
+!**/sounds/focus*.wav
+
+# 🖼️ Images (Keep icons, exclude large assets)
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.webp
+# But keep small icons and logos
+!**/icons/*.png
+!**/logos/*.svg
+!**/favicon.*
+
+# 🎬 Video Files
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+
+# 📄 Office Documents
+*.docx
+*.xlsx
+*.pptx
+*.pdf
+# But keep documentation PDFs
+!📖 DOCUMENTATION/**/*.pdf
+
+# 🔐 Certificates & Keys
+*.crt
+*.csr
+*.der
+*.pfx
+*.p7b
+*.p7c
+
+# 🌍 Localization Build
+*.pot
+*.po~
+
+# 📱 Mobile Platform Specific
+platforms/
+plugins/
+www/
+
+# 🎯 Performance Monitoring
+.lighthouseci/
+lighthouse-results/
+
+# 🤖 AI/ML Models (Large files)
+*.model
+*.pkl
+*.joblib
+*.h5
+*.pb
+
+# 🎪 Jupyter Lab
+.jupyter/
+.local/share/jupyter/
+
+# 🔄 Sync & Backup Services
+.sync/
+.dropbox/
+.icloud/
+.onedrive/
+
+# 🎮 Gaming & Entertainment
+screenshots/
+recordings/
+replays/
+
+# 📊 Database Dumps
+*.sql
+*.dump
+
+# 🚀 Empire Custom Ignores
+# Add your personal files/folders here
+personal/
+private/
+drafts/
+
+# 🧠 ADHD Helper: Ignore chaos folders
+mess/
+chaos/
+unsorted/
+random/
+misc/
+
+# ⚡ Legendary Empire: Keep the important stuff!
+# This .gitignore is designed for neurodivergent developers
+# It ignores distractions while preserving the legendary structure

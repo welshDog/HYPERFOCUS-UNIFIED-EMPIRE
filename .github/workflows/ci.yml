@@ -1,0 +1,386 @@
+name: 🚀 Legendary Empire CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  EMPIRE_ENV: ci
+  NODE_VERSION: '18'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  detect-changes:
+    name: 🔍 Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      core-systems: ${{ steps.changes.outputs.core-systems }}
+      ai-agents: ${{ steps.changes.outputs.ai-agents }}
+      applications: ${{ steps.changes.outputs.applications }}
+      neurodivergent-tools: ${{ steps.changes.outputs.neurodivergent-tools }}
+      development: ${{ steps.changes.outputs.development }}
+      docs: ${{ steps.changes.outputs.docs }}
+    steps:
+      - name: Checkout empire
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed paths
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            core-systems:
+              - '🚀 CORE-SYSTEMS/**'
+            ai-agents:
+              - '🤖 AI-AGENTS/**'
+            applications:
+              - '🎮 APPLICATIONS/**'
+            neurodivergent-tools:
+              - '🧠 NEURODIVERGENT-TOOLS/**'
+            development:
+              - '🛠️ DEVELOPMENT/**'
+              - 'Makefile'
+              - '*.sh'
+            docs:
+              - '📖 DOCUMENTATION/**'
+              - '*.md'
+
+  core-systems-tests:
+    name: 🚀 Core Systems Tests
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.core-systems == 'true'
+    strategy:
+      matrix:
+        component: [chaos-genius-dashboard, broski-tower]
+    steps:
+      - name: Checkout empire
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/requirements.txt', '**/package*.json') }}
+
+      - name: Install dependencies
+        run: |
+          cd "🚀 CORE-SYSTEMS/${{ matrix.component }}"
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+          if [ -f package.json ]; then
+            npm install
+          fi
+
+      - name: Run tests
+        run: |
+          cd "🚀 CORE-SYSTEMS/${{ matrix.component }}"
+          if [ -f pytest.ini ] || [ -f pyproject.toml ] || [ -f setup.cfg ]; then
+            pytest
+          fi
+          if [ -f package.json ] && jq -e '.scripts.test' package.json; then
+            npm test
+          fi
+
+      - name: Security scan
+        run: |
+          cd "🚀 CORE-SYSTEMS/${{ matrix.component }}"
+          if [ -f requirements.txt ]; then
+            pip install safety
+            safety check
+          fi
+          if [ -f package.json ]; then
+            npm audit
+          fi
+
+  ai-agents-tests:
+    name: 🤖 AI Agents Tests
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.ai-agents == 'true'
+    strategy:
+      matrix:
+        agent: [broski-bot, discord-manager]
+    steps:
+      - name: Checkout empire
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          cd "🤖 AI-AGENTS/${{ matrix.agent }}"
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+          if [ -f package.json ]; then
+            npm install
+          fi
+
+      - name: Run agent tests
+        run: |
+          cd "🤖 AI-AGENTS/${{ matrix.agent }}"
+          if [ -f pytest.ini ] || [ -f pyproject.toml ]; then
+            pytest
+          fi
+          if [ -f package.json ] && jq -e '.scripts.test' package.json; then
+            npm test
+          fi
+
+      - name: Agent communication test
+        run: |
+          # Test agent-to-agent communication patterns
+          python -c "
+          import sys
+          sys.path.append('🤖 AI-AGENTS/${{ matrix.agent }}')
+          # Basic import test to ensure agent can be loaded
+          try:
+              import main
+              print('✅ Agent ${{ matrix.agent }} loads successfully')
+          except ImportError as e:
+              print(f'❌ Agent ${{ matrix.agent }} import failed: {e}')
+              sys.exit(1)
+          "
+
+  applications-tests:
+    name: 🎮 Applications Tests
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.applications == 'true'
+    strategy:
+      matrix:
+        app: [hyperfocus-hub-ts, hyperfocus-hub, filter-zone, neighbor-work]
+    steps:
+      - name: Checkout empire
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          cd "🎮 APPLICATIONS/${{ matrix.app }}"
+          if [ -f package.json ]; then
+            npm install
+          fi
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Build application
+        run: |
+          cd "🎮 APPLICATIONS/${{ matrix.app }}"
+          if [ -f package.json ] && jq -e '.scripts.build' package.json; then
+            npm run build
+          fi
+
+      - name: Run application tests
+        run: |
+          cd "🎮 APPLICATIONS/${{ matrix.app }}"
+          if [ -f package.json ] && jq -e '.scripts.test' package.json; then
+            npm test
+          fi
+          if [ -f pytest.ini ] || [ -f pyproject.toml ]; then
+            pytest
+          fi
+
+  integration-tests:
+    name: 🔗 Integration Tests
+    runs-on: ubuntu-latest
+    needs: [core-systems-tests, ai-agents-tests, applications-tests]
+    if: always() && (needs.core-systems-tests.result == 'success' || needs.ai-agents-tests.result == 'success' || needs.applications-tests.result == 'success')
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+    steps:
+      - name: Checkout empire
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Setup integration environment
+        run: |
+          pip install pytest requests redis
+          # Create minimal integration test environment
+          mkdir -p integration-tests
+
+      - name: Create integration test suite
+        run: |
+          cat > integration-tests/test_empire_integration.py << 'EOF'
+          import pytest
+          import requests
+          import redis
+          import subprocess
+          import time
+          import os
+
+          def test_redis_connection():
+              """Test Redis connectivity for agent communication"""
+              r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+              r.ping()
+              r.set('empire:test', 'legendary')
+              assert r.get('empire:test') == 'legendary'
+
+          def test_directory_structure():
+              """Verify empire directory structure exists"""
+              required_dirs = [
+                  '🚀 CORE-SYSTEMS',
+                  '🤖 AI-AGENTS', 
+                  '🎮 APPLICATIONS',
+                  '🧠 NEURODIVERGENT-TOOLS',
+                  '📚 VERSION-ARCHIVE',
+                  '🛠️ DEVELOPMENT',
+                  '📖 DOCUMENTATION'
+              ]
+              for dir_name in required_dirs:
+                  assert os.path.exists(dir_name), f"Directory {dir_name} not found"
+
+          def test_documentation_exists():
+              """Verify critical documentation exists"""
+              docs = [
+                  '📖 DOCUMENTATION/LEGENDARY-README.md',
+                  '📖 DOCUMENTATION/ARCHITECTURE.md',
+                  '📖 DOCUMENTATION/MIGRATION-GUIDE.md',
+                  '📖 DOCUMENTATION/CONSOLIDATION-LOG.md'
+              ]
+              for doc in docs:
+                  assert os.path.exists(doc), f"Documentation {doc} not found"
+
+          def test_makefile_commands():
+              """Test that Makefile commands are available"""
+              result = subprocess.run(['make', 'help'], capture_output=True, text=True)
+              assert result.returncode == 0, "Makefile help command failed"
+          EOF
+
+      - name: Run integration tests
+        run: |
+          cd integration-tests
+          pytest -v test_empire_integration.py
+
+  security-scan:
+    name: 🛡️ Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout empire
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  documentation-check:
+    name: 📖 Documentation Check
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.docs == 'true'
+    steps:
+      - name: Checkout empire
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install markdown tools
+        run: |
+          npm install -g markdownlint-cli
+          npm install -g markdown-link-check
+
+      - name: Lint documentation
+        run: |
+          markdownlint "📖 DOCUMENTATION/**/*.md" || true
+
+      - name: Check documentation links
+        run: |
+          find "📖 DOCUMENTATION" -name "*.md" -exec markdown-link-check {} \; || true
+
+  deploy-staging:
+    name: 🚀 Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [integration-tests, security-scan]
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    environment: staging
+    steps:
+      - name: Checkout empire
+        uses: actions/checkout@v4
+
+      - name: Deploy to staging
+        run: |
+          echo "🚀 Deploying HYPERFOCUS UNIFIED EMPIRE to staging..."
+          # Add your staging deployment commands here
+          echo "✅ Staging deployment complete!"
+
+  deploy-production:
+    name: 🏰 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [integration-tests, security-scan]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+    steps:
+      - name: Checkout empire
+        uses: actions/checkout@v4
+
+      - name: Deploy to production
+        run: |
+          echo "🏰 Deploying HYPERFOCUS UNIFIED EMPIRE to production..."
+          # Add your production deployment commands here
+          echo "✅ Production deployment complete! Empire is LEGENDARY! ⚡"
+
+  notify-success:
+    name: 🎉 Notify Success
+    runs-on: ubuntu-latest
+    needs: [deploy-production]
+    if: success()
+    steps:
+      - name: Legendary success notification
+        run: |
+          echo "🎉 LEGENDARY SUCCESS! Your HYPERFOCUS UNIFIED EMPIRE is deployed and operational! ⚡❤️‍🔥"
