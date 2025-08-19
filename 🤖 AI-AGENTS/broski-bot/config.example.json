@@ -1,0 +1,83 @@
+﻿{
+    "exchange":  {
+                     "name":  "mexc",
+                     "api_key":  "",
+                     "api_secret":  "",
+                     "testnet":  false,
+                     "ip_whitelist":  [
+                                          "151.224.117.246"
+                                      ]
+                 },
+    "trading":  {
+                    "base_symbol":  "PI",
+                    "quote_symbol":  "USDT",
+                    "trade_amount":  10.0,
+                    "max_position_size":  50,
+                    "trade_interval_seconds":  60,
+                    "auto_trade":  false
+                },
+    "risk_management":  {
+                            "stop_loss_percentage":  2.0,
+                            "take_profit_percentage":  5.0,
+                            "max_daily_trades":  10,
+                            "max_open_positions":  3
+                        },
+    "strategies":  {
+                       "active_strategy":  "hyperfocus_strategy",
+                       "rsi_strategy":  {
+                                            "enabled":  false,
+                                            "timeframe":  "5",
+                                            "rsi_period":  14,
+                                            "rsi_overbought":  70,
+                                            "rsi_oversold":  30
+                                        },
+                       "macd_strategy":  {
+                                             "enabled":  false,
+                                             "timeframe":  "15m",
+                                             "fast_period":  12,
+                                             "slow_period":  26,
+                                             "signal_period":  9
+                                         },
+                       "ml_strategy":  {
+                                           "enabled":  false,
+                                           "model_path":  "C:\\Users\\Lyndz\\OneDrive\\Documents\\BROski the Crypto Bot\\train_model.py",
+                                           "confidence_threshold":  0.75
+                                       },
+                       "hyperfocus_strategy":  {
+                                                   "enabled":  true,
+                                                   "timeframe":  "15m",
+                                                   "rsi_period":  14,
+                                                   "rsi_overbought":  70,
+                                                   "rsi_oversold":  30,
+                                                   "fast_period":  12,
+                                                   "slow_period":  26,
+                                                   "signal_period":  9,
+                                                   "ma_fast":  20,
+                                                   "ma_slow":  50,
+                                                   "volume_factor":  1.5,
+                                                   "volume_lookback":  20,
+                                                   "require_confirmation":  true,
+                                                   "smart_exit":  true
+                                               }
+                   },
+    "notifications":  {
+                          "telegram":  {
+                                           "enabled":  true,
+                                           "bot_token":  "YOUR_TELEGRAM_BOT_TOKEN",
+                                           "chat_id":  "YOUR_TELEGRAM_CHAT_ID"
+                                       },
+                          "email":  {
+                                        "enabled":  false,
+                                        "smtp_server":  "smtp.gmail.com",
+                                        "smtp_port":  587,
+                                        "sender_email":  "your_email@gmail.com",
+                                        "password":  "your_app_password",
+                                        "receiver_email":  "your_email@gmail.com"
+                                    }
+                      },
+    "logging":  {
+                    "level":  "INFO",
+                    "save_to_file":  true,
+                    "log_directory":  "logs"
+                }
+}

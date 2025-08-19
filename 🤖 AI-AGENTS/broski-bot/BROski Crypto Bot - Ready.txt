@@ -1,0 +1,126 @@
+# BROski Crypto Bot - Ready for Testing!
+
+Great! The BROski Crypto Bot is now ready to test. Let me create a getting started guide to help you test the bot properly.
+
+```markdown
+
+
+# BROski Crypto Bot - Getting Started
+
+## 🚀 Quick Start Guide
+
+### Prerequisites
+Make sure you have installed the required dependencies:
+```bash
+pip install ccxt colorama requests pandas numpy matplotlib
+```
+
+### Step 1: Configure Your API Keys
+1. Ensure your MEXC API keys are set up in `config.json`
+2. Make sure your current IP address is added to the MEXC API whitelist
+
+### Step 2: Start the Bot
+Run the bot using the CLI interface:
+```bash
+python cli.py
+```
+
+### Step 3: Using the CLI
+The CLI menu provides these options:
+1. **Check Balance** - View your MEXC account balance
+2. **Update Trading Settings** - Change trading pair, amount, etc.
+3. **Start Trading Bot** - Launch the bot in background
+4. **Show Current Settings** - Display your current configuration
+5. **Exit** - Quit the CLI
+
+## 🔧 Testing Tips
+
+### Testing the Connection
+First, check if your API connection is working:
+1. Run `python cli.py`
+2. Select "Check Balance"
+3. If successful, you should see your MEXC account balance
+
+### Test Bot in Monitoring Mode
+Before enabling automatic trading:
+1. Ensure `auto_trade` is set to `false` in your config
+2. Run the bot in monitoring mode to observe signals
+3. Review log files in the `logs` directory to see trading signals
+
+### Test Trading Strategies
+1. Try different trading strategies (RSI, MACD) to see which works best
+2. Start with small trade amounts during testing
+3. Monitor the bot's performance over time before committing larger amounts
+
+## 🛡️ Troubleshooting
+
+### IP Whitelist Error
+If you see an IP whitelist error:
+1. Run `python ip_whitelist_helper.py` to update your IP address
+2. Add your current IP to your MEXC API key's whitelist
+3. Restart the bot after updating the IP whitelist
+
+### Command Not Found
+If you see "command not found" errors:
+1. Make sure you're in the correct directory
+2. Ensure you have Python installed correctly
+3. Install any missing dependencies with pip
+
+### API Connection Issues
+If the bot can't connect to MEXC:
+1. Verify your API keys are correct
+2. Check your internet connection
+3. Ensure MEXC's API service is operational
+
+## 📊 What's Next?
+
+1. **Monitor Performance**: Track how the bot performs over time
+2. **Fine-tune Parameters**: Adjust strategy settings for better results
+3. **Consider Telegram**: Set up notifications to stay informed
+4. **Backup Config**: Regularly back up your configuration
+
+## 📑 File Overview
+
+- `cli.py` - Main interface for interacting with the bot
+- `start_bot.py` - Core trading engine
+- `config.json` - Your personal configuration
+- `logs/` - Directory containing bot activity logs
+- `strategies/` - Trading strategy implementations
+- `wizard.py` - Configuration wizard for easy setup
+
+Enjoy trading with BROski! 📈
+```
+
+## Ready to Test BROski!
+
+Your BROski Crypto Bot is now fully set up and ready for testing! Here's what you can do:
+
+### Step 1: Test the Connection First
+
+```bash
+python cli.py
+```
+
+Choose option 1 (Check Balance) to see if your API connection works after fixing the IP whitelist issue.
+
+### Step 2: Review Your Settings
+
+Choose option 4 (Show Current Settings) to verify your trading configuration is correct.
+
+### Step 3: Start the Bot in Monitoring Mode
+
+Make sure `auto_trade` is set to `false` in your config, then choose option 3 (Start Trading Bot) to run the bot in monitoring mode. This will generate trading signals without executing actual trades.
+
+### Important Notes:
+
+1. **IP Whitelist** - Did you update your MEXC API whitelist with your current IP (151.224.117.246)?
+
+2. **Logs** - Check the `logs` directory for detailed activity logs after running the bot.
+
+3. **Start Small** - When you're ready to enable auto-trading, start with small amounts.
+
+If you encounter any issues, refer to the detailed troubleshooting guide in the GETTING_STARTED.md file I've created.
+
+Would you like me to help you with anything specific while testing the bot?
+
+Made changes.

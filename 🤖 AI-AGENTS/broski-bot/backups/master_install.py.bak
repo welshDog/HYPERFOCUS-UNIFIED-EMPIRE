@@ -1,0 +1,144 @@
+import subprocess
+import sys
+import os
+import platform
+import json
+import shutil
+from pathlib import Path
+import datetime
+
+print("🚀 BROski Master Installation Wizard 🚀")
+print("======================================")
+print("\nThis will install all components and create a clean, unified BROski setup.\n")
+
+# Create necessary directories
+dirs_to_create = ["logs", "backups", "data", "strategies"]
+for directory in dirs_to_create:
+    os.makedirs(directory, exist_ok=True)
+    print(f"✓ Verified directory: {directory}")
+
+# Install dependencies
+print("\n📦 Installing required packages...")
+required_packages = ["ccxt", "pandas", "matplotlib", "colorama", "requests", "numpy", "psutil"]
+subprocess.call([sys.executable, "-m", "pip", "install"] + required_packages)
+
+print("\n📦 Installing optional packages...")
+optional_packages = []
+if os.name == "nt":  # Windows
+    optional_packages.extend(["pywin32", "winshell"])
+subprocess.call([sys.executable, "-m", "pip", "install"] + optional_packages)
+
+# Create config if it doesn't exist
+config_path = Path("config.json")
+example_config_path = Path("config.example.json")
+
+if not config_path.exists():
+    if example_config_path.exists():
+        shutil.copy(example_config_path, config_path)
+        print("\n✓ Created config.json from example template")
+    else:
+        # Create minimal config
+        default_config = {
+            "exchange": {
+                "name": "mexc",
+                "api_key": "",
+                "api_secret": ""
+            },
+            "trading": {
+                "base_symbol": "PI",
+                "quote_symbol": "USDT",
+                "auto_trade": False,
+                "trade_amount": 10,
+                "trade_interval_seconds": 60,
+                "max_position_size": 100
+            },
+            "strategies": {
+                "active_strategy": "rsi_strategy",
+                "rsi_strategy": {
+                    "enabled": True,
+                    "timeframe": "5m",
+                    "rsi_period": 14,
+                    "rsi_overbought": 70,
+                    "rsi_oversold": 30
+                },
+                "macd_strategy": {
+                    "enabled": False,
+                    "timeframe": "15m",
+                    "fast_period": 12,
+                    "slow_period": 26,
+                    "signal_period": 9
+                },
+                "ml_strategy": {
+                    "enabled": False,
+                    "model_path": "models/prediction_model.h5",
+                    "confidence_threshold": 0.75,
+                    "timeframe": "15m"
+                }
+            },
+            "risk_management": {
+                "stop_loss_percentage": 2.0,
+                "take_profit_percentage": 5.0,
+                "max_daily_trades": 10,
+                "max_open_positions": 3
+            },
+            "notifications": {
+                "telegram": {
+                    "enabled": False,
+                    "bot_token": "",
+                    "chat_id": ""
+                }
+            }
+        }
+        
+        with open(config_path, 'w') as f:
+            json.dump(default_config, f, indent=2)
+        print("\n✓ Created default config.json")
+
+# Create quick-start batch files for Windows
+if os.name == "nt":
+    with open("START_BROSKI.bat", "w") as f:
+        f.write("@echo off\n")
+        f.write("echo Starting BROski Control Center...\n")
+        f.write(f'"{sys.executable}" BROski_Control_Center.py\n')
+        f.write("pause\n")
+    
+    with open("START_MONITOR.bat", "w") as f:
+        f.write("@echo off\n")
+        f.write("echo Starting BROski Monitor...\n")
+        f.write(f'"{sys.executable}" cli.py\n')
+        f.write("pause\n")
+    
+    print("✓ Created quick-start batch files")
+
+# Create desktop shortcut
+try:
+    if os.name == "nt":
+        import winshell
+        from win32com.client import Dispatch
+        
+        desktop = winshell.desktop()
+        path = os.path.join(desktop, "BROski Bot.lnk")
+        
+        shell = Dispatch('WScript.Shell')
+        shortcut = shell.CreateShortCut(path)
+        shortcut.Targetpath = sys.executable
+        shortcut.Arguments = "BROski_Control_Center.py"
+        shortcut.WorkingDirectory = os.getcwd()
+        
+        if os.path.exists("favicon.ico"):
+            shortcut.IconLocation = os.path.abspath("favicon.ico")
+            
+        shortcut.save()
+        print("✓ Created desktop shortcut")
+except:
+    print("! Could not create desktop shortcut (optional)")
+
+print("\n✅ BROski Master Installation Complete!")
+print("\nTo start BROski Bot:")
+if os.name == "nt":
+    print("  1. Double-click START_BROSKI.bat or")
+    print("  2. Run 'python BROski_Control_Center.py'")
+else:
+    print("  Run 'python BROski_Control_Center.py'")
+
+print("\nAll systems are configured and ready to trade!")

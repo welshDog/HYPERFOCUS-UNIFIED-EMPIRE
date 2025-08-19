@@ -1,0 +1,225 @@
+import os
+import json
+import numpy as np
+import pickle
+from pathlib import Path
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO, 
+                   format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger("BROski-LiteML")
+
+class LiteMLStrategy:
+    """
+    A lightweight ML strategy that doesn't require TensorFlow
+    Uses scikit-learn models instead
+    """
+    
+    def __init__(self, config):
+        self.config = config
+        self.model_path = config.get("model_path", "models/lite_model.pkl")
+        self.confidence_threshold = config.get("confidence_threshold", 0.75)
+        self.model = None
+        self.scaler = None
+        self.sequence_length = 60
+        self.feature_columns = ["close", "volume", "ma_5", "ma_20", 
+                               "volatility", "rsi", "momentum"]
+        
+        # Try to load model if it exists
+        try:
+            self._load_model()
+        except Exception as e:
+            logger.warning(f"Could not load ML model: {str(e)}")
+            logger.info("Lightweight ML strategy will need training before use")
+    
+    def _load_model(self):
+        """Load the model and scaler"""
+        model_path = Path(self.model_path)
+        scaler_path = Path("models/lite_scaler.pkl")
+        
+        if model_path.exists() and scaler_path.exists():
+            with open(model_path, 'rb') as f:
+                self.model = pickle.load(f)
+                
+            with open(scaler_path, 'rb') as f:
+                self.scaler = pickle.load(f)
+                
+            logger.info(f"Loaded lightweight ML model from {self.model_path}")
+            return True
+        else:
+            logger.warning("Model or scaler file not found")
+            return False
+    
+    def prepare_data(self, df):
+        """Prepare data for prediction"""
+        # Make sure df has all necessary columns 
+        if 'ma_5' not in df.columns:
+            df['ma_5'] = df['close'].rolling(window=5).mean()
+        
+        if 'ma_20' not in df.columns:
+            df['ma_20'] = df['close'].rolling(window=20).mean()
+        
+        if 'volatility' not in df.columns:
+            df['volatility'] = df['close'].pct_change().rolling(window=20).std()
+        
+        if 'rsi' not in df.columns:
+            # Calculate RSI
+            delta = df['close'].diff()
+            gain = delta.where(delta > 0, 0)
+            loss = -delta.where(delta < 0, 0)
+            avg_gain = gain.rolling(window=14).mean()
+            avg_loss = loss.rolling(window=14).mean()
+            rs = avg_gain / avg_loss
+            df['rsi'] = 100 - (100 / (1 + rs))
+        
+        if 'momentum' not in df.columns:
+            df['momentum'] = df['close'] - df['close'].shift(10)
+            
+        # Drop NaN values
+        df = df.dropna()
+        
+        # Select features
+        features = df[self.feature_columns].values
+        
+        if self.scaler:
+            # Scale features
+            features = self.scaler.transform(features)
+            
+        return features
+    
+    def predict(self, features):
+        """Generate a prediction using the model"""
+        if self.model is None:
+            logger.warning("Model not loaded. Cannot generate prediction.")
+            return 0.5
+        
+        try:
+            prediction = self.model.predict_proba([features[-1]])[0][1]
+            return prediction
+        except Exception as e:
+            logger.error(f"Error during prediction: {str(e)}")
+            return 0.5
+    
+    def generate_signals(self, df):
+        """Generate trading signals based on ML predictions"""
+        signals = []
+        
+        if len(df) < 30:
+            logger.warning(f"Not enough data for ML prediction. Need at least 30 candles.")
+            return signals
+            
+        try:
+            # Prepare data
+            features = self.prepare_data(df)
+            
+            # Generate prediction
+            prediction = self.predict(features)
+            
+            logger.info(f"ML prediction: {prediction:.4f} (threshold: {self.confidence_threshold})")
+            
+            # Logic for buy/sell signals based on confidence threshold
+            if prediction >= self.confidence_threshold:
+                signals.append({
+                    'type': 'buy',
+                    'price': df['close'].iloc[-1],
+                    'confidence': prediction,
+                    'timestamp': df.index[-1]
+                })
+                logger.info(f"🟢 BUY signal generated with confidence {prediction:.4f}")
+                
+            elif prediction <= (1 - self.confidence_threshold):
+                signals.append({
+                    'type': 'sell',
+                    'price': df['close'].iloc[-1],
+                    'confidence': 1 - prediction,
+                    'timestamp': df.index[-1]
+                })
+                logger.info(f"🔴 SELL signal generated with confidence {1-prediction:.4f}")
+            else:
+                logger.info(f"⚪ No signal - prediction {prediction:.4f} within uncertainty range")
+                
+            return signals
+            
+        except Exception as e:
+            logger.error(f"Error generating ML signals: {str(e)}")
+            return []
+    
+    def train_model(self, df):
+        """Train a lightweight ML model using scikit-learn"""
+        try:
+            import pandas as pd
+            from sklearn.preprocessing import MinMaxScaler
+            from sklearn.model_selection import train_test_split
+            from sklearn.ensemble import RandomForestClassifier
+            
+            logger.info("Training lightweight ML model...")
+            
+            # Calculate features
+            if 'ma_5' not in df.columns:
+                df['ma_5'] = df['close'].rolling(window=5).mean()
+            
+            if 'ma_20' not in df.columns:
+                df['ma_20'] = df['close'].rolling(window=20).mean()
+            
+            if 'volatility' not in df.columns:
+                df['volatility'] = df['close'].pct_change().rolling(window=20).std()
+            
+            if 'rsi' not in df.columns:
+                # Calculate RSI
+                delta = df['close'].diff()
+                gain = delta.where(delta > 0, 0)
+                loss = -delta.where(delta < 0, 0)
+                avg_gain = gain.rolling(window=14).mean()
+                avg_loss = loss.rolling(window=14).mean()
+                rs = avg_gain / avg_loss
+                df['rsi'] = 100 - (100 / (1 + rs))
+            
+            if 'momentum' not in df.columns:
+                df['momentum'] = df['close'] - df['close'].shift(10)
+                
+            # Create target: 1 if price goes up in next 10 periods, else 0
+            df['target'] = (df['close'].shift(-10) > df['close']).astype(int)
+            
+            # Drop NaN values
+            df = df.dropna()
+            
+            # Select features and target
+            X = df[self.feature_columns].values
+            y = df['target'].values
+            
+            # Scale features
+            self.scaler = MinMaxScaler()
+            X_scaled = self.scaler.fit_transform(X)
+            
+            # Split data
+            X_train, X_test, y_train, y_test = train_test_split(
+                X_scaled, y, test_size=0.2, random_state=42
+            )
+            
+            # Train model
+            self.model = RandomForestClassifier(n_estimators=100, random_state=42)
+            self.model.fit(X_train, y_train)
+            
+            # Evaluate model
+            accuracy = self.model.score(X_test, y_test)
+            logger.info(f"Model accuracy: {accuracy:.4f}")
+            
+            # Save model and scaler
+            os.makedirs("models", exist_ok=True)
+            with open(self.model_path, 'wb') as f:
+                pickle.dump(self.model, f)
+                
+            with open("models/lite_scaler.pkl", 'wb') as f:
+                pickle.dump(self.scaler, f)
+                
+            logger.info(f"Model saved to {self.model_path}")
+            return True
+            
+        except ImportError as e:
+            logger.error(f"Required libraries not installed: {str(e)}")
+            logger.info("Try running: pip install scikit-learn pandas")
+            return False
+        except Exception as e:
+            logger.error(f"Error training model: {str(e)}")
+            return False

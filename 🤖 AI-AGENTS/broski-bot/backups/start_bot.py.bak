@@ -1,0 +1,273 @@
+import os
+import json
+import logging
+import sys
+from pathlib import Path
+import time
+import traceback
+import threading
+
+# Create logs directory if it doesn't exist
+os.makedirs("logs", exist_ok=True)
+
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler("logs/broski_bot.log"),
+        logging.StreamHandler()
+    ]
+)
+
+logger = logging.getLogger("BROski")
+
+def check_config():
+    """Check if the config file exists and has API keys configured"""
+    config_path = Path("config.json")
+    
+    # If config doesn't exist but example does, copy it
+    if not config_path.exists():
+        example_config_path = Path("config.example.json")
+        if example_config_path.exists():
+            import shutil
+            logger.info("Config file not found, creating from example...")
+            shutil.copy(example_config_path, config_path)
+            logger.info("Created config.json from example configuration")
+        else:
+            logger.error("Configuration file not found! Run setup.py first.")
+            return False
+    
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+    
+    # Check if API keys are set
+    if not config["exchange"]["api_key"] or config["exchange"]["api_key"] == "YOUR_MEXC_API_KEY_HERE":
+        logger.error("API key not configured! Please run setup.py or edit config.json")
+        return False
+        
+    if not config["exchange"]["api_secret"] or config["exchange"]["api_secret"] == "YOUR_MEXC_API_SECRET_HERE":
+        logger.error("API secret not configured! Please run setup.py or edit config.json")
+        return False
+    
+    # Check for placeholder values in example API keys
+    if "example" in config["exchange"]["api_key"].lower() or "example" in config["exchange"]["api_secret"].lower():
+        logger.error("You're using example API keys! Please add your real MEXC API keys.")
+        return False
+    
+    logger.info("Configuration file contains API keys - valid")
+    return True
+
+def test_api_connection():
+    """Test connection to the exchange API"""
+    try:
+        # This would be replaced with actual API connection code
+        import ccxt
+        
+        logger.info("Testing connection to MEXC Exchange...")
+        
+        # Load config
+        with open("config.json", 'r') as f:
+            config = json.load(f)
+        
+        # Initialize exchange
+        exchange = ccxt.mexc({
+            'apiKey': config['exchange']['api_key'],
+            'secret': config['exchange']['api_secret'],
+            'enableRateLimit': True,
+        })
+        
+        # Test API connection by fetching ticker
+        # Fix: Correctly construct the symbol string
+        base = config['trading']['base_symbol']
+        quote = config['trading']['quote_symbol']
+        symbol = f"{base}/{quote}"
+        
+        logger.info(f"Fetching price for {symbol}...")
+        ticker = exchange.fetch_ticker(symbol)
+        
+        logger.info(f"Connection successful! Current {symbol} price: {ticker['last']}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"API connection failed: {str(e)}")
+        logger.error(traceback.format_exc())
+        return False
+
+def run_trading_loop(config, exchange):
+    # Load trading configuration
+    symbol = f"{config['trading']['base_symbol']}/{config['trading']['quote_symbol']}"
+    
+    # FIX: Define timeframe based on active strategy's config or use default
+    if "strategies" in config and "active_strategy" in config["strategies"]:
+        active_strategy = config["strategies"]["active_strategy"]
+        if active_strategy in config["strategies"]:
+            strategy_config = config["strategies"][active_strategy]
+            timeframe = strategy_config.get("timeframe", "15m")
+        else:
+            timeframe = "15m"  # Default if active strategy config not found
+    else:
+        timeframe = "15m"  # Default if no strategy configuration
+    
+    logger.info(f"Starting trading loop for {symbol} on {timeframe} timeframe")
+    
+    while True:  # Trading loop
+        try:
+            # Now timeframe is defined before being used
+            logger.info(f"Fetching {timeframe} candles for {symbol}...")
+            
+            # Get candlestick data
+            candles = exchange.fetch_ohlcv(symbol, timeframe)
+            
+            # Get current price
+            ticker = exchange.fetch_ticker(symbol)
+            current_price = ticker['last']
+            
+            logger.info(f"Current price: {current_price}")
+            
+            # Execute strategy based on active strategy
+            execute_strategy(config, exchange, symbol, candles, current_price)
+            
+            # Wait before next check
+            trade_interval = config["trading"].get("trade_interval_seconds", 60)
+            time.sleep(trade_interval)
+            
+        except Exception as e:
+            logger.error(f"Error in trading loop: {str(e)}")
+            logger.error(traceback.format_exc())
+            time.sleep(10)  # Wait before retrying
+
+def execute_strategy(config, exchange, symbol, candles, current_price):
+    """Execute the active trading strategy"""
+    active_strategy = config["strategies"]["active_strategy"]
+    
+    if active_strategy == "rsi_strategy":
+        from strategies.rsi_strategy import execute_rsi_strategy
+        signal = execute_rsi_strategy(candles, config["strategies"]["rsi_strategy"])
+    elif active_strategy == "macd_strategy":
+        from strategies.macd_strategy import execute_macd_strategy
+        signal = execute_macd_strategy(candles, config["strategies"]["macd_strategy"])
+    else:
+        logger.warning(f"Strategy {active_strategy} not implemented, no signal generated")
+        signal = None
+        
+    # Handle the trading signal
+    if signal == "BUY":
+        logger.info("🔼 BUY signal generated")
+        
+        # Execute trade if auto-trading is enabled
+        if config["trading"]["auto_trade"]:
+            execute_trade(exchange, symbol, "buy", config["trading"]["trade_amount"], current_price)
+            
+    elif signal == "SELL":
+        logger.info("🔽 SELL signal generated")
+        
+        # Execute trade if auto-trading is enabled
+        if config["trading"]["auto_trade"]:
+            execute_trade(exchange, symbol, "sell", config["trading"]["trade_amount"], current_price)
+
+def execute_trade(exchange, symbol, side, amount, price):
+    """Execute a trade on the exchange"""
+    try:
+        logger.info(f"Executing {side.upper()} order for {amount} at {price}")
+        
+        # Place market order
+        order = exchange.create_market_order(
+            symbol=symbol,
+            side=side,
+            amount=amount / price if side == "buy" else amount
+        )
+        
+        logger.info(f"Order executed successfully: {order['id']}")
+        
+        # Log the trade to file
+        log_trade(symbol, side, amount, price, order['id'])
+        
+        return order
+    except Exception as e:
+        logger.error(f"Trade execution failed: {str(e)}")
+        logger.error(traceback.format_exc())
+        return None
+
+def log_trade(symbol, side, amount, price, order_id):
+    """Log trade details to file"""
+    import datetime
+    
+    os.makedirs("data", exist_okay=True)
+    
+    with open("data/trade_history.csv", "a") as f:
+        if os.path.getsize("data/trade_history.csv") == 0:
+            # Write header if file is empty
+            f.write("timestamp,symbol,side,amount,price,order_id\n")
+            
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        f.write(f"{timestamp},{symbol},{side},{amount},{price},{order_id}\n")
+
+def start_bot():
+    """Start the BROski trading bot"""
+    logger.info("Starting BROski Crypto Trading Bot...")
+    
+    # Check if configuration exists and API keys are set
+    if not check_config():
+        logger.error("Configuration check failed. Please set up your API keys.")
+        return False
+    
+    # Test API connection
+    if not test_api_connection():
+        logger.error("API connection test failed. Please check your API keys and internet connection.")
+        return False
+        
+    # Load configuration
+    with open("config.json", 'r') as f:
+        config = json.load(f)
+    
+    # Import ccxt for exchange access
+    import ccxt
+    exchange = ccxt.mexc({
+        'apiKey': config['exchange']['api_key'],
+        'secret': config['exchange']['api_secret'],
+        'enableRateLimit': True,
+    })
+    
+    # Start trading in a separate thread so we can catch keyboard interrupts
+    trading_thread = threading.Thread(target=run_trading_loop, args=(config, exchange))
+    trading_thread.daemon = True
+    trading_thread.start()
+    
+    base = config["trading"]["base_symbol"]
+    quote = config["trading"]["quote_symbol"]
+    strategy = config["strategies"]["active_strategy"]
+    auto_trade = config["trading"]["auto_trade"]
+    
+    logger.info(f"Trading pair: {base}/{quote}")
+    logger.info(f"Active strategy: {strategy}")
+    logger.info(f"Auto-trading: {'Enabled' if auto_trade else 'Disabled (monitoring mode)'}")
+    
+    if not auto_trade:
+        logger.info("Bot is running in monitoring mode. No actual trades will be executed.")
+    
+    # Keep the main thread alive to catch keyboard interrupts
+    while trading_thread.is_alive():
+        try:
+            trading_thread.join(1)
+        except KeyboardInterrupt:
+            logger.info("Bot stopped by user. Shutting down...")
+            return True
+    
+    return True
+
+if __name__ == "__main__":
+    try:
+        # Start the bot
+        success = start_bot()
+        
+        if not success:
+            logger.error("Bot failed to start. Please check the logs for details.")
+            sys.exit(1)
+            
+    except KeyboardInterrupt:
+        logger.info("Bot stopped by user. Shutting down...")
+    except Exception as e:
+        logger.critical(f"Unexpected error: {str(e)}")
+        logger.critical(traceback.format_exc())
+        sys.exit(1)
