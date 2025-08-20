@@ -1,0 +1,67 @@
+{
+    "name": "neuro-social-backend",
+    "version": "1.0.0",
+    "description": "Backend API for the world's first neurodivergent-focused social platform",
+    "main": "server.js",
+    "scripts": {
+        "dev": "nodemon server.js",
+        "start": "node server.js",
+        "test": "jest",
+        "build": "echo 'Build process for production deployment'",
+        "lint": "eslint .",
+        "health-check": "node health-check.js"
+    },
+    "keywords": [
+        "neurodivergent",
+        "ADHD",
+        "autism",
+        "dyslexia",
+        "social-platform",
+        "accessibility",
+        "broski-economy",
+        "AI-support"
+    ],
+    "dependencies": {
+        "express": "^4.18.2",
+        "socket.io": "^4.7.2",
+        "cors": "^2.8.5",
+        "helmet": "^7.1.0",
+        "dotenv": "^16.3.1",
+        "axios": "^1.5.1",
+        "jsonwebtoken": "^9.0.2",
+        "bcryptjs": "^2.4.3",
+        "mongoose": "^7.5.1",
+        "redis": "^4.6.8",
+        "graphql": "^16.8.1",
+        "apollo-server-express": "^3.12.1",
+        "ws": "^8.14.2",
+        "body-parser": "^1.20.2",
+        "compression": "^1.7.4",
+        "rate-limiter-flexible": "^3.0.8",
+        "joi": "^17.10.1",
+        "winston": "^3.10.0",
+        "multer": "^1.4.5-lts.1",
+        "sharp": "^0.32.5",
+        "@sentry/node": "^7.73.0",
+        "node-cron": "^3.0.2"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1",
+        "jest": "^29.7.0",
+        "supertest": "^6.3.3",
+        "eslint": "^8.50.0",
+        "@types/node": "^20.6.3",
+        "typescript": "^5.2.2"
+    },
+    "engines": {
+        "node": ">=18.0.0",
+        "npm": ">=9.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hyperfocus-zone/neuro-social-platform"
+    },
+    "author": "HYPERFOCUS ZONE Development Team <team@hyperfocuszone.com>",
+    "license": "MIT",
+    "private": true
+}

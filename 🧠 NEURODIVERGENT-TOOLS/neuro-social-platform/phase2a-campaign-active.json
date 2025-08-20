@@ -1,0 +1,42 @@
+{
+  "launch_timestamp": "2025-08-20T00:29:30.886599",
+  "campaign_status": "ACTIVE",
+  "immediate_actions": [
+    {
+      "platform": "Reddit",
+      "action": "Begin organic engagement in r/ADHD, r/autism, r/neurodiversity",
+      "timeline": "Today - Week 1",
+      "target": "60 users from Reddit communities"
+    },
+    {
+      "platform": "TikTok",
+      "action": "Direct outreach to ADHD/Autism content creators",
+      "timeline": "Week 1-2",
+      "target": "25 creators with 10K+ followers"
+    },
+    {
+      "platform": "LinkedIn",
+      "action": "Professional neurodiversity network outreach",
+      "timeline": "Week 1-2",
+      "target": "10 neurodivergent professionals"
+    },
+    {
+      "platform": "Discord",
+      "action": "Engage with ADHD/Autism community moderators",
+      "timeline": "Week 1-2",
+      "target": "15 community leaders"
+    }
+  ],
+  "daily_targets": {
+    "week_1": " 5-7 new founder recruits per day",
+    "week_2": "10-12 new founder recruits per day",
+    "total_goal": "100 founders by end of week 2"
+  },
+  "tracking_metrics": [
+    "Outreach messages sent",
+    "Response rates by platform",
+    "Conversion rate to platform signup",
+    "Founder program completion rate",
+    "Community engagement levels"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+    "name": "hyperfocus-zone-web",
+    "version": "1.0.0",
+    "description": "Neurodivergent-first social platform web application",
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint",
+        "hyperfocus-dev": "next dev --turbo"
+    },
+    "dependencies": {
+        "next": "14.0.0",
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "typescript": "5.2.0",
+        "@types/node": "20.8.0",
+        "@types/react": "18.2.0",
+        "@types/react-dom": "18.2.0",
+        "tailwindcss": "^3.3.0",
+        "autoprefixer": "^10.4.0",
+        "postcss": "^8.4.0",
+        "framer-motion": "^10.16.0",
+        "lucide-react": "^0.290.0",
+        "@radix-ui/react-slider": "^1.1.0",
+        "@radix-ui/react-switch": "^1.0.0",
+        "@radix-ui/react-select": "^2.0.0",
+        "axios": "^1.6.0",
+        "socket.io-client": "^4.7.0"
+    },
+    "devDependencies": {
+        "eslint": "8.51.0",
+        "eslint-config-next": "14.0.0",
+        "@typescript-eslint/eslint-plugin": "^6.7.0"
+    },
+    "keywords": [
+        "neurodivergent",
+        "ADHD",
+        "accessibility",
+        "social-platform"
+    ],
+    "author": "HyperFocus Zone Team",
+    "license": "MIT"
+}

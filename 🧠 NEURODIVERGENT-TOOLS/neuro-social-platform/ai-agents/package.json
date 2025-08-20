@@ -1,0 +1,88 @@
+{
+    "name": "neuro-social-ai-agents",
+    "version": "1.0.0",
+    "description": "AI agents specifically designed to support neurodivergent minds - ADHD, Autism, Dyslexia",
+    "main": "agent-coordinator.py",
+    "scripts": {
+        "start": "python agent-coordinator.py",
+        "broski-economy": "python broski-economy-service.py",
+        "adhd-coach": "python agents/adhd-coach-agent.py",
+        "focus-buddy": "python agents/focus-buddy-agent.py",
+        "autism-navigator": "python agents/autism-navigator-agent.py",
+        "dyslexia-helper": "python agents/dyslexia-helper-agent.py",
+        "test": "python -m pytest tests/",
+        "health-check": "python health-check.py",
+        "deploy-all": "python deploy-all-agents.py"
+    },
+    "keywords": [
+        "AI-agents",
+        "neurodivergent-support",
+        "ADHD-assistance",
+        "autism-support",
+        "dyslexia-help",
+        "broski-economy",
+        "social-earning",
+        "accessibility",
+        "python",
+        "flask",
+        "machine-learning"
+    ],
+    "dependencies": {
+        "flask": "^2.3.3",
+        "flask-cors": "^4.0.0",
+        "flask-socketio": "^5.3.6",
+        "requests": "^2.31.0",
+        "openai": "^0.28.1",
+        "anthropic": "^0.3.11",
+        "transformers": "^4.33.2",
+        "torch": "^2.0.1",
+        "numpy": "^1.24.3",
+        "pandas": "^2.0.3",
+        "scikit-learn": "^1.3.0",
+        "nltk": "^3.8.1",
+        "spacy": "^3.6.1",
+        "redis": "^4.6.0",
+        "pymongo": "^4.5.0",
+        "schedule": "^1.2.0",
+        "python-dotenv": "^1.0.0",
+        "websockets": "^11.0.3",
+        "aiohttp": "^3.8.5",
+        "asyncio": "^3.4.3",
+        "logging": "^0.4.9.6"
+    },
+    "devDependencies": {
+        "pytest": "^7.4.2",
+        "pytest-asyncio": "^0.21.1",
+        "black": "^23.7.0",
+        "flake8": "^6.0.0",
+        "mypy": "^1.5.1"
+    },
+    "python_requires": ">=3.9",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hyperfocus-zone/neuro-social-platform"
+    },
+    "author": "HYPERFOCUS ZONE AI Development Team <ai-team@hyperfocuszone.com>",
+    "license": "MIT",
+    "private": true,
+    "ai_agents": {
+        "total_agents": 5,
+        "specialized_support": [
+            "ADHD Coach Agent - Executive function support & task breakdown",
+            "Focus Buddy Agent - Virtual body doubling & accountability",
+            "Autism Navigator - Social interaction guidance & communication",
+            "Dyslexia Helper - Reading assistance & text processing",
+            "BROski Economy Agent - Social earning & rewards coordination"
+        ],
+        "capabilities": [
+            "Real-time neurodivergent support",
+            "ADHD-optimized task management",
+            "Autism social navigation assistance",
+            "Dyslexia reading comprehension aid",
+            "BROski$ social earning coordination",
+            "Crisis intervention protocols",
+            "Achievement celebration system",
+            "Personalized learning adaptation"
+        ]
+    }
+}

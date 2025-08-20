@@ -1,0 +1,96 @@
+{
+  "agent_specifications": [
+    {
+      "name": "ADHD Coach Agent",
+      "specialization": "Executive function support & task breakdown",
+      "capabilities": [
+        "Break complex tasks into ADHD-friendly steps",
+        "Provide gentle reminders and motivation",
+        "Track focus patterns and optimize timing",
+        "Celebrate achievements with dopamine rewards",
+        "Crisis intervention for ADHD overwhelm"
+      ],
+      "personality": "Energetic, understanding, non-judgmental",
+      "communication_style": "Short, clear messages with emojis",
+      "deployment_priority": "CRITICAL - Deploy first"
+    },
+    {
+      "name": "Focus Buddy Agent",
+      "specialization": "Virtual body doubling & accountability",
+      "capabilities": [
+        "Provide virtual presence during work sessions",
+        "Gentle check-ins without interrupting flow",
+        "Celebrate hyperfocus achievements",
+        "Help with transition between tasks",
+        "Emergency motivation when focus breaks"
+      ],
+      "personality": "Calm, steady, encouraging presence",
+      "communication_style": "Minimal interruption, supportive presence",
+      "deployment_priority": "HIGH - Deploy with ADHD Coach"
+    },
+    {
+      "name": "Autism Navigator Agent",
+      "specialization": "Social interaction guidance & communication",
+      "capabilities": [
+        "Explain social cues and implicit communication",
+        "Provide scripts for common social situations",
+        "Help decode neurotypical communication patterns",
+        "Support during social anxiety moments",
+        "Celebrate social successes and progress"
+      ],
+      "personality": "Logical, patient, detail-oriented",
+      "communication_style": "Clear, direct, comprehensive explanations",
+      "deployment_priority": "HIGH - Essential for autism support"
+    },
+    {
+      "name": "Dyslexia Helper Agent",
+      "specialization": "Reading assistance & text processing",
+      "capabilities": [
+        "Convert text to audio for easier processing",
+        "Highlight key information in text",
+        "Provide spelling and grammar assistance",
+        "Offer alternative text presentations",
+        "Support writing and communication tasks"
+      ],
+      "personality": "Patient, adaptive, creative",
+      "communication_style": "Multi-modal: text, audio, visual aids",
+      "deployment_priority": "MEDIUM - Deploy after core agents"
+    },
+    {
+      "name": "Crisis Support Agent",
+      "specialization": "Mental health crisis intervention",
+      "capabilities": [
+        "Recognize signs of mental health crisis",
+        "Provide immediate coping strategies",
+        "Connect users to human mental health resources",
+        "De-escalate overwhelming situations",
+        "Maintain crisis intervention protocols"
+      ],
+      "personality": "Calm, professional, deeply empathetic",
+      "communication_style": "Gentle, crisis-informed, safety-focused",
+      "deployment_priority": "CRITICAL - Always available"
+    }
+  ],
+  "deployment_infrastructure": {
+    "ai_model_stack": [
+      "OpenAI GPT-4 for advanced reasoning",
+      "Anthropic Claude for ethical reasoning",
+      "Local models for privacy-sensitive interactions",
+      "Specialized neurodivergent training datasets"
+    ],
+    "response_times": {
+      "crisis_support": "<2 seconds",
+      "adhd_coach": "<5 seconds",
+      "focus_buddy": "<3 seconds",
+      "autism_navigator": "<10 seconds (detailed responses)",
+      "dyslexia_helper": "<5 seconds"
+    },
+    "availability": "24/7 with human escalation protocols",
+    "privacy_protections": [
+      "End-to-end encryption for all conversations",
+      "No conversation logging for sensitive topics",
+      "User-controlled data retention policies",
+      "Anonymous interaction options"
+    ]
+  }
+}

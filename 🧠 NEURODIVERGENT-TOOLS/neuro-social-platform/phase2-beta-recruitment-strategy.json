@@ -1,0 +1,84 @@
+{
+  "target_demographics": {
+    "primary_users": [
+      "ADHD individuals (18-45 years)",
+      "Autistic adults seeking community",
+      "Adults with dyslexia",
+      "Neurodivergent professionals",
+      "Parents of neurodivergent children",
+      "Mental health advocates",
+      "Accessibility champions"
+    ],
+    "geographic_focus": [
+      "United States (primary)",
+      "Canada",
+      "United Kingdom",
+      "Australia",
+      "Germany (ADHD-friendly)",
+      "Scandinavia (progressive accessibility)"
+    ]
+  },
+  "recruitment_channels": {
+    "reddit_communities": [
+      "r/ADHD (2.1M members)",
+      "r/autism (400K members)",
+      "r/dyslexia (50K members)",
+      "r/neurodiversity (100K members)",
+      "r/ADHDmemes (500K members)",
+      "r/aspergirls (150K members)"
+    ],
+    "discord_servers": [
+      "ADHD support communities",
+      "Autism acceptance servers",
+      "Neurodivergent professionals",
+      "Mental health support groups"
+    ],
+    "social_media": [
+      "TikTok ADHD creators (10M+ combined followers)",
+      "Instagram neurodivergent advocates",
+      "Twitter ADHD/Autism communities",
+      "YouTube accessibility channels"
+    ],
+    "professional_networks": [
+      "LinkedIn neurodiversity groups",
+      "ADHD/Autism professional organizations",
+      "Accessibility advocacy groups",
+      "Mental health professional networks"
+    ]
+  },
+  "recruitment_messaging": {
+    "core_value_proposition": "First social platform where ADHD/Autism/Dyslexia = SUPERPOWERS",
+    "key_messages": [
+      "🧠 Your neurodivergent mind is a superpower, not a disorder",
+      "💰 Earn BROski$ cryptocurrency for being authentically you",
+      "🤖 AI agents specifically designed to support your unique needs",
+      "🎯 ADHD-optimized features: focus timers, dopamine rewards, gentle notifications",
+      "♾️ Autism-friendly: predictable interface, quiet spaces, clear communication",
+      "📖 Dyslexia support: accessible fonts, audio options, reading assistance",
+      "❤️ Community that truly understands neurodivergent experiences"
+    ]
+  },
+  "beta_program_structure": {
+    "total_beta_users": 1000,
+    "recruitment_phases": [
+      {
+        "phase": "Phase 2A - Core Community (Week 1-2)",
+        "target": 100,
+        "focus": "ADHD/Autism advocates and content creators",
+        "incentives": "Founder status + 500 welcome BROski$"
+      },
+      {
+        "phase": "Phase 2B - Early Adopters (Week 3-4)",
+        "target": 400,
+        "focus": "Active neurodivergent community members",
+        "incentives": "Beta badge + 250 welcome BROski$"
+      },
+      {
+        "phase": "Phase 2C - Community Growth (Week 5-6)",
+        "target": 500,
+        "focus": "Broader neurodivergent community",
+        "incentives": "Early access + 100 welcome BROski$"
+      }
+    ]
+  }
+}

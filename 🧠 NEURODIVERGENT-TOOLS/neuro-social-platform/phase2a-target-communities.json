@@ -1,0 +1,77 @@
+{
+  "reddit_priority_targets": [
+    {
+      "community": "r/ADHD",
+      "members": "2.1M",
+      "target_users": 25,
+      "approach": "Engage with top contributors and helpful community members",
+      "strategy": "Offer early access to ADHD-first social platform with earning potential"
+    },
+    {
+      "community": "r/autism",
+      "members": "400K",
+      "target_users": 15,
+      "approach": "Connect with autism advocates and self-advocates",
+      "strategy": "Highlight autism-friendly features and sensory accommodations"
+    },
+    {
+      "community": "r/ADHDmemes",
+      "members": "500K",
+      "target_users": 10,
+      "approach": "Engage with content creators and meme makers",
+      "strategy": "Platform for monetizing ADHD humor and creativity"
+    },
+    {
+      "community": "r/neurodiversity",
+      "members": "100K",
+      "target_users": 10,
+      "approach": "Target neurodiversity advocates and researchers",
+      "strategy": "Revolutionary platform celebrating neurodivergent excellence"
+    }
+  ],
+  "tiktok_creator_targets": [
+    {
+      "category": "ADHD Content Creators",
+      "target_count": 15,
+      "approach": "Direct outreach to creators with 10K+ followers",
+      "offer": "Early access + revenue sharing for ADHD content",
+      "keywords": "#ADHD #ADHDtips #ADHDlife #neurodivergent"
+    },
+    {
+      "category": "Autism Advocates",
+      "target_count": 10,
+      "approach": "Connect with autistic self-advocates",
+      "offer": "Platform designed with autism accommodations first",
+      "keywords": "#autism #autistic #stimming #masking"
+    },
+    {
+      "category": "Mental Health Creators",
+      "target_count": 10,
+      "approach": "Creators focused on neurodivergent mental health",
+      "offer": "Monetize mental health advocacy through BROski$ economy",
+      "keywords": "#mentalhealth #therapy #neurodivergent #ADHD"
+    }
+  ],
+  "discord_community_targets": [
+    {
+      "type": "ADHD Support Servers",
+      "target_users": 8,
+      "approach": "Engage with server moderators and active helpers",
+      "offer": "Better platform for ADHD community management"
+    },
+    {
+      "type": "Autism Communities",
+      "target_users": 7,
+      "approach": "Connect with autistic community leaders",
+      "offer": "Sensory-friendly social platform with clear communication"
+    }
+  ],
+  "professional_networks": [
+    {
+      "platform": "LinkedIn Neurodiversity Groups",
+      "target_users": 10,
+      "approach": "Target neurodivergent professionals and advocates",
+      "offer": "Professional networking with neurodivergent-first design"
+    }
+  ]
+}
