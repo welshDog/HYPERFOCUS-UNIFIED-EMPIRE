@@ -1,0 +1,70 @@
+version: 2
+updates:
+  # Enable version updates for npm (Node.js/TypeScript)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "welshDog"
+    assignees:
+      - "welshDog"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+
+  # Enable version updates for pip (Python)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "welshDog"
+    assignees:
+      - "welshDog"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "welshDog"
+    assignees:
+      - "welshDog"
+    commit-message:
+      prefix: "ci"
+
+  # Enable version updates for Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "welshDog"
+    assignees:
+      - "welshDog"
+    commit-message:
+      prefix: "docker"

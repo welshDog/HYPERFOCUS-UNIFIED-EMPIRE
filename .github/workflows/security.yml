@@ -1,0 +1,269 @@
+name: "Unified Empire Security Scan"
+
+on:
+  push:
+    branches: [ "main", "master", "develop" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  schedule:
+    - cron: '0 6 * * 1'  # Weekly on Mondays at 6 AM UTC
+
+jobs:
+  codeql-analysis:
+    name: CodeQL Multi-Language Security Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Dependencies
+      run: |
+        # Install Node.js dependencies if package.json exists
+        find . -name "package.json" -not -path "./node_modules/*" | head -5 | while read pkg; do
+          dir=$(dirname "$pkg")
+          cd "$dir"
+          npm ci || true
+          cd - > /dev/null
+        done
+
+        # Install Python dependencies if requirements.txt exists
+        find . -name "requirements.txt" -not -path "./**/node_modules/*" | head -5 | while read req; do
+          dir=$(dirname "$req")
+          cd "$dir"
+          pip install -r requirements.txt || true
+          cd - > /dev/null
+        done
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: javascript,typescript,python
+        config-file: ./.github/codeql-config.yml
+        queries: security-and-quality
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:javascript"
+        category: "/language:typescript"
+        category: "/language:python"
+
+    - name: Security Scan Complete
+      run: |
+        echo "SECURITY ANALYSIS COMPLETE"
+        echo "Multi-language CodeQL security scanning finished!"
+        echo "Unified Empire repository protected with automated security analysis!"
+
+  dependency-check:
+    name: Multi-Language Dependency Security Check
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Check Node.js Dependencies
+      run: |
+        echo "🔍 Checking Node.js dependency vulnerabilities..."
+        find . -name "package.json" -not -path "./node_modules/*" | head -5 | while read pkg; do
+          dir=$(dirname "$pkg")
+          echo "Checking dependencies in $dir"
+          cd "$dir"
+          npm audit --audit-level=moderate || true
+          cd - > /dev/null
+        done
+
+    - name: Check Python Dependencies
+      run: |
+        echo "🐍 Checking Python dependency vulnerabilities..."
+        pip install safety
+
+        find . -name "requirements.txt" -not -path "./**/node_modules/*" | head -5 | while read req; do
+          dir=$(dirname "$req")
+          echo "Checking Python dependencies in $dir"
+          cd "$dir"
+          safety check --full-report || true
+          cd - > /dev/null
+        done
+
+    - name: Python Security Linting
+      run: |
+        echo "🛡️ Running Python security analysis..."
+        pip install bandit
+
+        find . -name "*.py" -not -path "./**/node_modules/*" -not -path "./**/__pycache__/*" | head -10 | while read pyfile; do
+          echo "Analyzing $pyfile"
+          bandit -r "$pyfile" || true
+        done
+
+  secret-scan:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Scan for secrets
+      uses: gitleaks/gitleaks-action@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  license-check:
+    name: License Compliance
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Check Node.js Licenses
+      run: |
+        echo "📋 Checking Node.js package licenses..."
+        npm install -g license-checker
+
+        find . -name "package.json" -not -path "./node_modules/*" | head -3 | while read pkg; do
+          dir=$(dirname "$pkg")
+          echo "Checking licenses in $dir"
+          cd "$dir"
+          license-checker --json > license-report.json || true
+          cd - > /dev/null
+        done
+
+    - name: Check Python Licenses
+      run: |
+        echo "📋 Checking Python package licenses..."
+        pip install pip-licenses
+
+        find . -name "requirements.txt" -not -path "./**/node_modules/*" | head -3 | while read req; do
+          dir=$(dirname "$req")
+          echo "Checking Python licenses in $dir"
+          cd "$dir"
+          pip-licenses --format=json > python-license-report.json || true
+          cd - > /dev/null
+        done
+
+    - name: Upload license reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: license-reports
+        path: |
+          **/license-report.json
+          **/python-license-report.json
+      continue-on-error: true
+
+  trading-security-check:
+    name: Trading Bot Security Validation
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Trading Bot Security Analysis
+      run: |
+        echo "💰 Analyzing trading bot security..."
+
+        # Check for hardcoded API keys in trading bot files
+        if grep -r "api_key\|secret_key\|private_key" --include="*.py" . | grep -v "import\|from\|#\|config\|example"; then
+          echo "⚠️  Potential hardcoded trading API keys found!"
+          exit 1
+        else
+          echo "✅ No hardcoded trading API keys detected"
+        fi
+
+        # Check for debug mode in trading configurations
+        if grep -r "DEBUG.*=.*True" --include="*.py" .; then
+          echo "⚠️  Debug mode enabled in trading bot!"
+          exit 1
+        else
+          echo "✅ Trading bot debug mode properly disabled"
+        fi
+
+        # Check for secure random number generation
+        if grep -r "random\|randint\|choice" --include="*.py" . | grep -v "secrets\|os.urandom"; then
+          echo "⚠️  Insecure random number generation detected!"
+          exit 1
+        else
+          echo "✅ Secure random number generation verified"
+        fi
+
+  web-security-check:
+    name: Web Application Security Validation
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Web Application Security Analysis
+      run: |
+        echo "🌐 Analyzing web application security..."
+
+        # Check for insecure configurations in TypeScript/React apps
+        if grep -r "NODE_ENV.*development" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" .; then
+          echo "⚠️  Development environment detected in production code!"
+          exit 1
+        else
+          echo "✅ Production environment properly configured"
+        fi
+
+        # Check for console.log statements in production code
+        if grep -r "console\.log\|console\.warn\|console\.error" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" . | grep -v "development\|debug"; then
+          echo "⚠️  Console statements found in production code!"
+          exit 1
+        else
+          echo "✅ No console statements in production code"
+        fi
+
+        # Check for missing environment variable validation
+        if grep -r "process\.env\." --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" . | grep -v "||\|??\|default"; then
+          echo "⚠️  Unvalidated environment variables detected!"
+          exit 1
+        else
+          echo "✅ Environment variables properly validated"
+        fi

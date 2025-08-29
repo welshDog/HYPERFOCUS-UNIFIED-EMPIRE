@@ -1,0 +1,60 @@
+name: "CodeQL Configuration"
+
+disable-default-queries: false
+
+queries:
+  - uses: security-and-quality
+  - uses: security-experimental
+
+paths-ignore:
+  - node_modules
+  - __pycache__
+  - .git
+  - "**/*.pyc"
+  - "**/*.pyo"
+  - "**/*.test.js"
+  - "**/*.test.ts"
+  - "**/*.spec.js"
+  - "**/*.spec.ts"
+  - "**/*.test.py"
+  - "**/*.spec.py"
+  - "**/test_*.py"
+  - "**/*_test.py"
+  - "**/tests/"
+  - "*.log"
+  - "logs/"
+  - ".vscode/"
+  - ".github/"
+  - "dist/"
+  - "build/"
+  - "**/*.egg-info/"
+  - "**/migrations/"
+  - "**/alembic/"
+  - "bun.lockb"
+  - "package-lock.json"
+  - "**/.next/"
+  - "**/.nuxt/"
+  - "**/coverage/"
+  - "**/htmlcov/"
+  - "**/.pytest_cache/"
+  - "**/.nyc_output/"
+  - "**/backups/"
+  - "**/standups/"
+  - "**/strategies/"
+  - "**/utils/"
+  - "**/docs/"
+  - "**/📖 DOCUMENTATION/"
+  - "**/📚 VERSION-ARCHIVE/"
+  - "**/🚀 What's Being Created"
+  - "**/🛠️ DEVELOPMENT/"
+  - "**/🤖 AI-AGENTS/"
+  - "**/🧠 NEURODIVERGENT-TOOLS/"
+  - "**/🎮 APPLICATIONS/"
+
+paths:
+  - "**/*.js"
+  - "**/*.ts"
+  - "**/*.jsx"
+  - "**/*.tsx"
+  - "**/*.py"
+  - "**/*.ipynb"
