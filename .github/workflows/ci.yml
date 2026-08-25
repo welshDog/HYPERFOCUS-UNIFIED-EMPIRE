@@ -25,7 +25,7 @@ jobs:
       docs: ${{ steps.changes.outputs.docs }}
     steps:
       - name: Checkout empire
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -60,7 +60,7 @@ jobs:
         component: [chaos-genius-dashboard, broski-tower]
     steps:
       - name: Checkout empire
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -122,7 +122,7 @@ jobs:
         agent: [broski-bot, discord-manager]
     steps:
       - name: Checkout empire
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -179,7 +179,7 @@ jobs:
         app: [hyperfocus-hub-ts, hyperfocus-hub, filter-zone, neighbor-work]
     steps:
       - name: Checkout empire
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -230,7 +230,7 @@ jobs:
           - 6379:6379
     steps:
       - name: Checkout empire
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -301,7 +301,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout empire
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -323,7 +323,7 @@ jobs:
     if: needs.detect-changes.outputs.docs == 'true'
     steps:
       - name: Checkout empire
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -351,7 +351,7 @@ jobs:
     environment: staging
     steps:
       - name: Checkout empire
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Deploy to staging
         run: |
@@ -367,7 +367,7 @@ jobs:
     environment: production
     steps:
       - name: Checkout empire
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Deploy to production
         run: |
